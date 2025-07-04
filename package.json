@@ -1,0 +1,11 @@
+{
+  "name": "qa-trainee-project-techstack",
+  "version": "1.0.0",
+  "description": "Training project for QA Automation using Playwright and Typescript",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC"
+}
