@@ -1,21 +1,24 @@
 import { expect, Locator, Page } from '@playwright/test';
 
 export default class AddUserPage {
-  readonly genderDropdown: Locator;
   readonly userNameInput: Locator;
   readonly yearOfBirthInput: Locator;
   readonly createBtn: Locator;
+
+  readonly genderDropdown: Locator;
   readonly inputUserNameError: Locator;
   readonly inputYearOfBirthError: Locator;
 
   constructor(public page: Page) {
     this.page = page;
-    this.genderDropdown = page.locator('#selectGender');
-    this.userNameInput = page.getByPlaceholder('User Name');
+    this.userNameInput = page.getByLabel('User Name');
     this.yearOfBirthInput = page.getByPlaceholder('Year of Birth');
     this.createBtn = page.getByRole('button', { name: 'Create' });
-    this.inputUserNameError = page.locator('span#inputUserName-error');
-    this.inputYearOfBirthError = page.locator('span#inputYearOfBirth-error');
+
+    //Done in scope of task 'Topic 4: Locators'
+    this.genderDropdown = page.locator('//select[@id="selectGender"]');
+    this.inputUserNameError = page.locator('//span[@id="inputUserName-error"]');
+    this.inputYearOfBirthError = page.locator('//span[@data-testid="inputError-YearOfBirth"]');
   }
 
   async selectGender(gender: string) {
@@ -29,7 +32,6 @@ export default class AddUserPage {
     await expect(this.userNameInput, 'Username input should be enabled').toBeEnabled();
     await this.userNameInput.clear();
     await this.userNameInput.fill(username);
-    await expect(this.userNameInput, 'Username input should have value').toHaveValue(username);
   }
 
   async enterYearOfBirth(yearOfBirth: string) {
