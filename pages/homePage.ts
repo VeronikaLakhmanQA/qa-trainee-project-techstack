@@ -5,6 +5,6 @@ export default class HomePage {
 
   constructor(public page: Page) {
     this.page = page;
-    this.userNameCells = page.locator('[data-testid="td-UserName"]');
+    this.userNameCells = page.getByTestId('td-UserName');
   }
 }
