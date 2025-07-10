@@ -13,7 +13,7 @@ import { defineConfig, devices } from '@playwright/test';
  */
 export default defineConfig({
   testDir: './tests',
-  timeout: 40_000,  // Changed the default timeout value from 30_000 ms to 40_000 ms (maximum execution time of one test)
+  timeout: 40_000, // Changed the default timeout value from 30_000 ms to 40_000 ms (maximum execution time of one test)
   /* Run tests in files in parallel */
   fullyParallel: true,
   /* Fail the build on CI if you accidentally left test.only in the source code. */
@@ -46,18 +46,18 @@ export default defineConfig({
 
     {
       name: 'firefox',
-      use: { ...devices['Desktop Firefox'] },
+      use: { ...devices['Desktop Firefox'] }
     },
 
     {
       name: 'webkit',
-      use: { ...devices['Desktop Safari'] },
+      use: { ...devices['Desktop Safari'] }
     },
 
     /* Test against mobile viewport. */
     {
       name: 'Mobile Safari',
-      use: { ...devices['iPhone 15'] },
-    },
+      use: { ...devices['iPhone 15'] }
+    }
   ]
 });
