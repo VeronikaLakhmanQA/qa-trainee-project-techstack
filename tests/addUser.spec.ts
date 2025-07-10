@@ -63,16 +63,19 @@ test('Validation error is shown when "User Name" field has less than minimum val
   );
 });
 
-// test('Validation error is shown when "User Name" field has more than maximum valid length', async ({ page }) => {
-//   const addUserPage = new AddUserPage(page);
-//   const longUsername = faker.string.alpha({ length: 15 });
+test('"User Name" field should not allow more than 14 characters', async ({ page }) => {
+  const addUserPage = new AddUserPage(page);
+  const longUsername = faker.string.alpha({ length: 15 });
 
-//   await addUserPage.enterUsername(longUsername);
-//   await addUserPage.submitAddUserForm();
+  await addUserPage.enterUsername(longUsername);
+  await addUserPage.submitAddUserForm();
 
-//   expect(addUserPage.inputUserNameError, "Invalid 'User Name' error should be visible").toBeVisible();
-//   expect(await addUserPage.getErrorText(addUserPage.inputUserNameError)).toContain('Name is too long');
-// });
+  const actualUsernameValue = await addUserPage.userNameInput.inputValue();
+  expect(
+    actualUsernameValue.length,
+    '"User Name" field should limit input to 14 characters'
+  ).toBeLessThanOrEqual(14);
+});
 
 test('Validation error is shown when "Year of Birth" is less than allowed minimum 1900', async ({
   page
