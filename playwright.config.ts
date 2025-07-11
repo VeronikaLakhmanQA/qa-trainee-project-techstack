@@ -15,7 +15,7 @@ export default defineConfig({
   testDir: './tests',
   timeout: 40_000, // Changed the default timeout value from 30_000 ms to 40_000 ms (maximum execution time of one test)
   /* Run tests in files in parallel */
-  fullyParallel: true,
+  fullyParallel: false,
   /* Fail the build on CI if you accidentally left test.only in the source code. */
   forbidOnly: !!process.env.CI,
   /* Retry on CI only */
@@ -27,7 +27,6 @@ export default defineConfig({
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
     ignoreHTTPSErrors: true,
-    actionTimeout: 10_000, //Wait a maximum of 10 seconds for the action
     /* Base URL to use in actions like `await page.goto('/')`. */
     baseURL: 'https://traineeautomation.azurewebsites.net/',
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
