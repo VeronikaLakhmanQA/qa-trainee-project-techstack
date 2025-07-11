@@ -11,14 +11,12 @@ export default class AddUserPage {
 
   constructor(public page: Page) {
     this.page = page;
-    this.userNameInput = page.getByLabel('User Name');
-    this.yearOfBirthInput = page.getByPlaceholder('Year of Birth');
-    this.createBtn = page.getByRole('button', { name: 'Create' });
-
-    //Done in scope of task 'Topic 4: Locators'
-    this.genderDropdown = page.locator('//select[@id="selectGender"]');
-    this.inputUserNameError = page.locator('//span[@id="inputUserName-error"]');
-    this.inputYearOfBirthError = page.locator('//span[@data-testid="inputError-YearOfBirth"]');
+    this.userNameInput = page.getByTestId('input-UserName');
+    this.yearOfBirthInput = page.getByTestId('input-YearOfBirth');
+    this.createBtn = page.getByTestId('button-Create');
+    this.genderDropdown = page.getByTestId('select-Gender');
+    this.inputUserNameError = page.getByTestId('inputError-UserName');
+    this.inputYearOfBirthError = page.getByTestId('inputError-YearOfBirth');
   }
 
   async selectGender(gender: string) {
