@@ -1,4 +1,5 @@
 import { expect, Locator, Page } from '@playwright/test';
+import { UserDTO } from '../dto/userDto';
 
 export default class AddUserPage {
   readonly userNameInput: Locator;
@@ -46,6 +47,12 @@ export default class AddUserPage {
     await expect(this.createBtn).toBeVisible();
     await expect(this.createBtn).toBeEnabled();
     await this.createBtn.click();
+  }
+
+  async fillUserForm(user: UserDTO) {
+    await this.selectGender(user.gender);
+    await this.enterUsername(user.userName);
+    await this.enterYearOfBirth(user.yearOfBirth);
   }
 
   async getErrorText(errorLocator: Locator) {
