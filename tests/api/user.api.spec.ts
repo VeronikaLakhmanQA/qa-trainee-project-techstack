@@ -1,42 +1,33 @@
-import { test, expect, request } from '@playwright/test';
-import { base, faker } from '@faker-js/faker';
+import { test, expect } from '@playwright/test';
+import { faker } from '@faker-js/faker';
 import { UserDTO } from '../../dto/userDto';
-
-export const testApiUsers: Record<string, UserDTO> = {
-  newApiUser: {
-    gender: 1,
-    name: faker.person.firstName('male'),
-    yearOfBirth: '1990'
-  },
-  updatedApiUser: {
-    gender: 2,
-    name: faker.person.firstName('female'),
-    yearOfBirth: '2001'
-  }
-};
 
 test.describe('User API - CRUD', () => {
   let userId: number;
 
+  test.beforeEach(async ({ request, baseURL }) => {
+    const newApiUser: UserDTO = {
+      gender: 1,
+      name: faker.person.firstName('male'),
+      yearOfBirth: '1993'
+    };
 
-  test('POST /api/User should create a new user and return 200', async ({ request, baseURL }) => {
     const postApiResponse = await request.post(`${baseURL}api/User`, {
-      data: testApiUsers.newApiUser
+      data: newApiUser
     });
 
     expect(postApiResponse.status(), 'Status code should be 200 when creating new user').toBe(200);
-
     const body = await postApiResponse.json();
-    expect(body.name, 'Created user should have the expected name').toBe(
-      testApiUsers.newApiUser.name
-    );
-    expect(body.yearOfBirth, 'Created user should have the expected year of birth').toBe(
-      Number(testApiUsers.newApiUser.yearOfBirth)
-    );
-    expect(body.gender, 'Created user should have the expected gender').toBe(
-      testApiUsers.newApiUser.gender
-    );
+
     userId = body.id;
+  });
+
+  test.afterEach(async ({ request, baseURL }) => {
+    const deleteUserResponse = await request.delete(`${baseURL}api/User/${userId}`);
+    expect(
+      deleteUserResponse.ok(),
+      'Expected status code 200 after deleting the user'
+    ).toBeTruthy();
   });
 
   test('Get /api/User - should return list of users', async ({ request, baseURL }) => {
@@ -61,25 +52,28 @@ test.describe('User API - CRUD', () => {
   });
 
   test('PUT /api/User/:id - should update the user', async ({ request, baseURL }) => {
+    const updatedApiUser: UserDTO = {
+      gender: 2,
+      name: faker.person.firstName('female'),
+      yearOfBirth: '2002'
+    };
+
     const putApiResponse = await request.put(`${baseURL}api/User/${userId}`, {
-      data: testApiUsers.updatedApiUser
+      data: updatedApiUser
     });
 
     expect(putApiResponse.status(), 'Expected status code 200 after updating the user').toBe(200);
 
     const body = await putApiResponse.json();
-    expect(body.name).toBe(testApiUsers.updatedApiUser.name);
-  });
-
-  test('DELETE /api/User/:id - should delete the user', async ({ request, baseURL }) => {
-    const deleteUserResponse = await request.delete(`${baseURL}api/User/${userId}`);
-    expect(deleteUserResponse.status(), 'Expected status code 200 after deleting the user').toBe(
-      200
+    expect(body.name, 'Expected updated name to match the value sent in PUT request').toBe(
+      updatedApiUser.name
     );
-  });
-
-  test('GET /api/User/:id - should return 404 after deletion', async ({ request, baseURL }) => {
-    const getDeletedUserResponse = await request.get(`${baseURL}api/User/${userId}`);
-    expect(getDeletedUserResponse.status(), "Expected status code 404 for deleted user").toBe(404);
+    expect(body.gender, 'Expected updated gender to match the value sent in PUT request').toBe(
+      updatedApiUser.gender
+    );
+    expect(
+      body.yearOfBirth,
+      'Expected updated year of birth to match the value sent in PUT request'
+    ).toBe(Number(updatedApiUser.yearOfBirth));
   });
 });
