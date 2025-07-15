@@ -1,5 +1,7 @@
+import { Gender } from '../enums/gender.enum';
+
 export interface UserDTO {
-  gender: 'Undefined' | 'Male' | 'Female';
-  userName: string;
+  gender: Gender;
+  name: string;
   yearOfBirth: string;
 }

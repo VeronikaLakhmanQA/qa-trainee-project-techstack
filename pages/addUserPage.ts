@@ -1,5 +1,6 @@
 import { expect, Locator, Page } from '@playwright/test';
 import { UserDTO } from '../dto/userDto';
+import { Gender } from '../enums/gender.enum';
 
 export default class AddUserPage {
   readonly userNameInput: Locator;
@@ -20,10 +21,10 @@ export default class AddUserPage {
     this.inputYearOfBirthError = page.getByTestId('inputError-YearOfBirth');
   }
 
-  async selectGender(gender: string) {
+  async selectGender(genderValue: number) {
     await expect(this.genderDropdown).toBeVisible();
     await expect(this.genderDropdown).toBeEnabled();
-    await this.genderDropdown.selectOption(gender);
+    await this.genderDropdown.selectOption({ value: genderValue.toString() });
   }
 
   async enterUsername(username: string) {
@@ -51,7 +52,7 @@ export default class AddUserPage {
 
   async fillUserForm(user: UserDTO) {
     await this.selectGender(user.gender);
-    await this.enterUsername(user.userName);
+    await this.enterUsername(user.name);
     await this.enterYearOfBirth(user.yearOfBirth);
   }
 

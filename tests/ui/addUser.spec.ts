@@ -1,20 +1,21 @@
 import { test, expect, Page } from '@playwright/test';
 import { faker } from '@faker-js/faker';
-import AddUserPage from '../pages/addUserPage';
-import HomePage from '../pages/homePage';
-import { UserDTO } from '../dto/userDto';
+import AddUserPage from '../../pages/addUserPage';
+import HomePage from '../../pages/homePage';
+import { UserDTO } from '../../dto/userDto';
+import { Gender } from '../../enums/gender.enum';
 
 let addUserPage: AddUserPage;
 
 export const testUsers: Record<string, UserDTO> = {
   validData: {
-    gender: 'Male',
-    userName: faker.person.firstName('male'),
+    gender: Gender.Male,
+    name: faker.person.firstName('male'),
     yearOfBirth: '1990'
   },
   shortName: {
-    gender: 'Female',
-    userName: faker.string.alpha({ length: 2 }),
+    gender: Gender.Female,
+    name: faker.string.alpha({ length: 2 }),
     yearOfBirth: '2001'
   }
 };
@@ -42,7 +43,7 @@ test('Create new user with valid "User Name" and "Year of Birth"', async ({ page
 
   await test.step('Verify that user was added to the table', async () => {
     await expect(
-      homePage.userNameCells.filter({ hasText: testUsers.validData.userName }).last()
+      homePage.userNameCells.filter({ hasText: testUsers.validData.name }).last()
     ).toBeVisible();
   });
 });
