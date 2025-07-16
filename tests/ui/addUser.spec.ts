@@ -1,8 +1,8 @@
-import { test, expect, Page } from '@playwright/test';
+import { test, expect } from '@playwright/test';
 import { faker } from '@faker-js/faker';
-import AddUserPage from '../../pages/addUserPage';
-import HomePage from '../../pages/homePage';
-import { UserDTO } from '../../dto/userDto';
+import AddUserPage from '../../pages/ui/addUserPage';
+import HomePage from '../../pages/ui/homePage';
+import { UserDTO } from '../../dto/userDTO';
 import { Gender } from '../../enums/gender.enum';
 
 let addUserPage: AddUserPage;
@@ -11,12 +11,12 @@ export const testUsers: Record<string, UserDTO> = {
   validData: {
     gender: Gender.Male,
     name: faker.person.firstName('male'),
-    yearOfBirth: '1990'
+    yearOfBirth: 1990
   },
   shortName: {
     gender: Gender.Female,
     name: faker.string.alpha({ length: 2 }),
-    yearOfBirth: '2001'
+    yearOfBirth: 2001
   }
 };
 
@@ -48,9 +48,7 @@ test('Create new user with valid "User Name" and "Year of Birth"', async ({ page
   });
 });
 
-test('User is not created when "User Name" is shorter than 3 characters and "Year of Birth" is between 1900 - 2005', async ({
-  page
-}) => {
+test('User is not created when "User Name" is shorter than 3 characters and "Year of Birth" is between 1900 - 2005', async () => {
   await test.step('Fill in "Add User" form with too short username', async () => {
     await addUserPage.fillUserForm(testUsers.shortName);
   });
@@ -71,7 +69,7 @@ test('User is not created when "User Name" is shorter than 3 characters and "Yea
   });
 });
 
-test('Should show browser error with empty "User Name" and "Year of Birth"', async ({ page }) => {
+test('Should show browser error with empty "User Name" and "Year of Birth"', async () => {
   await test.step('Submit empty "Add User" form', async () => {
     await addUserPage.submitAddUserForm();
   });
@@ -97,7 +95,7 @@ test('Should show browser error with empty "User Name" and "Year of Birth"', asy
   });
 });
 
-test('"User Name" field should not allow more than 14 characters', async ({ page }) => {
+test('"User Name" field should not allow more than 14 characters', async () => {
   const longUsername = faker.string.alpha({ length: 15 });
 
   await test.step('Enter username longer than 14 characters', async () => {
@@ -117,11 +115,9 @@ test('"User Name" field should not allow more than 14 characters', async ({ page
   });
 });
 
-test('Validation error is shown when "Year of Birth" is less than allowed minimum 1900', async ({
-  page
-}) => {
+test('Validation error is shown when "Year of Birth" is less than allowed minimum 1900', async () => {
   await test.step('Enter year of birth less then allowed minimum 1900', async () => {
-    await addUserPage.enterYearOfBirth('1899');
+    await addUserPage.enterYearOfBirth(1899);
   });
 
   await test.step('Submit the "Add User" form', async () => {
@@ -139,11 +135,9 @@ test('Validation error is shown when "Year of Birth" is less than allowed minimu
   });
 });
 
-test('Validation error is shown when "Year of Birth" is greater than allowed maximum 2005', async ({
-  page
-}) => {
+test('Validation error is shown when "Year of Birth" is greater than allowed maximum 2005', async () => {
   await test.step('Enter year of birth more than allowed maximum 2005', async () => {
-    await addUserPage.enterYearOfBirth('2006');
+    await addUserPage.enterYearOfBirth(2006);
   });
 
   await test.step('Submit the "Add User" form', async () => {

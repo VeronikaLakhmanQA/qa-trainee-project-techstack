@@ -1,5 +1,5 @@
 import { expect, Locator, Page } from '@playwright/test';
-import { UserDTO } from '../dto/userDTO';
+import { UserDTO } from '../../dto/userDTO';
 
 export default class AddUserPage {
   readonly userNameInput: Locator;
