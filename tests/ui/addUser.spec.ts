@@ -2,10 +2,14 @@ import { test, expect } from '@playwright/test';
 import { faker } from '@faker-js/faker';
 import AddUserPage from '../../pages/ui/addUserPage';
 import HomePage from '../../pages/ui/homePage';
+import { UserApi } from '../../pages/api/user.api';
 import { UserDTO } from '../../dto/userDTO';
 import { Gender } from '../../enums/gender.enum';
 
 let addUserPage: AddUserPage;
+let userApi: UserApi;
+
+let createdUsernames: string[] = [];
 
 export const testUsers: Record<string, UserDTO> = {
   validData: {
@@ -20,9 +24,28 @@ export const testUsers: Record<string, UserDTO> = {
   }
 };
 
-test.beforeEach(async ({ page, baseURL }) => {
+test.beforeEach(async ({ page, baseURL, request }) => {
   await page.goto(`${baseURL}Forms/AddUser`);
   addUserPage = new AddUserPage(page);
+  userApi = new UserApi(request, baseURL!);
+});
+
+test.afterEach(async () => {
+  if (!createdUsernames.length) return;
+
+  const response = await userApi.getUsers();
+  if (response.ok()) {
+    const users = await response.json();
+
+    for (const name of createdUsernames) {
+      const match = users.find((users: any) => users.name === name);
+      if (match) {
+        await userApi.deleteUser(match.id);
+      }
+    }
+  }
+
+  createdUsernames = [];
 });
 
 test('Create new user with valid "User Name" and "Year of Birth"', async ({ page, baseURL }) => {
@@ -34,6 +57,7 @@ test('Create new user with valid "User Name" and "Year of Birth"', async ({ page
 
   await test.step('Submit form', async () => {
     await addUserPage.submitAddUserForm();
+    createdUsernames.push(testUsers.validData.name);
   });
 
   await test.step('Verify redirection to home page', async () => {

@@ -77,3 +77,5 @@ test.describe('User API - CRUD', () => {
     ).toBe(Number(updatedApiUser.yearOfBirth));
   });
 });
+
+export { UserApi };
