@@ -1,4 +1,4 @@
-name: Playwright Tests
+name: Run Playwright Tests and Upload Report
 on:
   push:
     branches: [main, master]
