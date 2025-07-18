@@ -20,6 +20,8 @@ export default class AddUserPage {
     this.inputYearOfBirthError = page.getByTestId('inputError-YearOfBirth');
   }
 
+  // ToDo: use enum type here inside a method parametr instead of number
+  // ToDO: add lb after assertions, this logic should be devided by lbs, but not add lb after each expect(it can be one after group of assertions)
   async selectGender(genderValue: number) {
     await expect(this.genderDropdown).toBeVisible();
     await expect(this.genderDropdown).toBeEnabled();
@@ -55,6 +57,7 @@ export default class AddUserPage {
     await this.enterYearOfBirth(user.yearOfBirth);
   }
 
+  // ToDo: always add returned type in method signature
   async getErrorText(errorLocator: Locator) {
     return await errorLocator.textContent();
   }

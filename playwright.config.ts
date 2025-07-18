@@ -32,6 +32,8 @@ export default defineConfig({
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
     trace: 'on-first-retry',
     //Screenshots and vadeo for all tests, including successful ones
+    // ToDo: read about comments conventions (it's related to the comment above)
+    // ToDo: make Screenshots and video only for the failed tests. It's more common implementation on the real life projects
     screenshot: 'on',
     video: 'on'
   },
