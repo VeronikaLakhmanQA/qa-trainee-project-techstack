@@ -3,6 +3,7 @@ import { faker } from '@faker-js/faker';
 import { UserDTO } from '../../dto/userDTO';
 import { UserApi } from '../../pages/api/user.api';
 
+// ToDo: let's change tests' files fromat from spec.ts to test.ts (for all test files)
 test.describe('User API - CRUD', () => {
   let userApi: UserApi;
   let userId: number;
@@ -11,6 +12,7 @@ test.describe('User API - CRUD', () => {
     userApi = new UserApi(request, baseURL!);
 
     const newApiUser: UserDTO = {
+      // ToDo: Use here certain Gender fron enum instead of the numbers
       gender: 1,
       name: faker.person.firstName('male'),
       yearOfBirth: 1993
@@ -32,9 +34,12 @@ test.describe('User API - CRUD', () => {
     ).toBeTruthy();
   });
 
+  // ToDo: write in one format: "Get" and "GET" shouldn't be (uppercase I liked more))
   test('Get /api/User - should return list of users', async () => {
     const getUsersResponse = await userApi.getUsers();
 
+    // ToDo: you can see that you use these two line of the code not one time. 
+    // It will be great to create some kind of helper or utils folder/file to move it in the separate method there
     expect(getUsersResponse.ok, 'Expected successful response').toBeTruthy();
     expect(getUsersResponse.status(), 'Status code should be 200').toBe(200);
 
@@ -55,6 +60,7 @@ test.describe('User API - CRUD', () => {
 
   test('PUT /api/User/{id} - should update the user', async () => {
     const updatedApiUser: UserDTO = {
+      // ToDo: Use here certain Gender fron enum instead of the numbers
       gender: 2,
       name: faker.person.firstName('female'),
       yearOfBirth: 2002
