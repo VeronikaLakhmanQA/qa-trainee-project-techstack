@@ -40,7 +40,8 @@ export default defineConfig({
   projects: [
     {
       name: 'chromium',
-      use: { ...devices['Desktop Chrome'] }
+      use: { ...devices['Desktop Chrome'] },
+      grep: [/@desktop/]
     },
 
     // {
@@ -56,7 +57,16 @@ export default defineConfig({
     /* Test against mobile viewport. */
     {
       name: 'Mobile Safari',
-      use: { ...devices['iPhone 15'] }
+      use: { ...devices['iPhone 15'] },
+      grep: [/@mobile/]
+    },
+
+    {
+      name: 'API',
+      grep: [/@api/],
+      use: {
+        headless: true
+      }
     }
   ]
 });

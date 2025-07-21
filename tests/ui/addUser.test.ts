@@ -53,7 +53,7 @@ test.afterEach(async () => {
   createdUsernames = [];
 });
 
-test('Create new user with valid "User Name" and "Year of Birth"', async ({ page, baseURL }) => {
+test('@desktop Create new user with valid "User Name" and "Year of Birth"', async ({ page, baseURL }) => {
   const homePage = new HomePage(page);
 
   // ToDo: remove these test.step in each test (we can discuss it)
@@ -82,7 +82,7 @@ test('Create new user with valid "User Name" and "Year of Birth"', async ({ page
 
 // ToDo: it can be simplified: User is not created when user data is invalid
 // and inside the test you will add appropriate data and it wil be enaugh
-test('User is not created when "User Name" is shorter than 3 characters and "Year of Birth" is between 1900 - 2005', async () => {
+test('@desktop User is not created when "User Name" is shorter than 3 characters and "Year of Birth" is between 1900 - 2005', async () => {
   await test.step('Fill in "Add User" form with too short username', async () => {
     await addUserPage.fillUserForm(testUsers.shortName);
   });
@@ -104,7 +104,7 @@ test('User is not created when "User Name" is shorter than 3 characters and "Yea
   });
 });
 
-test('Should show browser error with empty "User Name" and "Year of Birth"', async () => {
+test('@desktop @mobile Should show browser error with empty "User Name" and "Year of Birth"', async () => {
   await test.step('Submit empty "Add User" form', async () => {
     await addUserPage.submitAddUserForm();
   });
@@ -132,7 +132,7 @@ test('Should show browser error with empty "User Name" and "Year of Birth"', asy
   });
 });
 
-test('"User Name" field should not allow more than 14 characters', async () => {
+test('@desktop @mobile "User Name" field should not allow more than 14 characters', async () => {
   const longUsername = faker.string.alpha({ length: 15 });
 
   await test.step('Enter username longer than 14 characters', async () => {
@@ -156,7 +156,7 @@ test('"User Name" field should not allow more than 14 characters', async () => {
 });
 
 // ToDo: Validation error is shown when "Year of Birth" is less than allowed minimum
-test('Validation error is shown when "Year of Birth" is less than allowed minimum 1900', async () => {
+test('@desktop @mobile Validation error is shown when "Year of Birth" is less than allowed minimum 1900', async () => {
   await test.step('Enter year of birth less then allowed minimum 1900', async () => {
     await addUserPage.enterYearOfBirth(1899);
   });
@@ -177,7 +177,7 @@ test('Validation error is shown when "Year of Birth" is less than allowed minimu
 });
 
 // ToDo: combine this and above one tests into test.each structure
-test('Validation error is shown when "Year of Birth" is greater than allowed maximum 2005', async () => {
+test('@mobile Validation error is shown when "Year of Birth" is greater than allowed maximum 2005', async () => {
   await test.step('Enter year of birth more than allowed maximum 2005', async () => {
     await addUserPage.enterYearOfBirth(2006);
   });

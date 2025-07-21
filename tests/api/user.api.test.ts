@@ -5,7 +5,7 @@ import { Gender } from '../../enums/gender.enum';
 import { UserApi } from '../../pages/api/user.api';
 import { expectSuccessfulResponse } from '../../utils/assertions';
 
-test.describe('User API - CRUD', () => {
+test.describe('@api User API - CRUD', () => {
   let userApi: UserApi;
   let userId: number;
 
