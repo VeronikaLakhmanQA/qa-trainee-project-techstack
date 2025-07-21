@@ -12,18 +12,18 @@ let createdUsernames: string[] = [];
 
 //ToDo: Let's devide this file into 2 ones be logic (it's great practice to store per 4 tests into one file (guess why?))
 
-// ToDo: how does your linter work? 
-// I made formatting mistakes on purpose. 
+// ToDo: how does your linter work?
+// I made formatting mistakes on purpose.
 // Linter should define them and resolve(you should have possibility to do it with the certain npm script)
 export const testUsers: Record<string, UserDTO> = {
   validData: {
     gender: Gender.Male,
     name: faker.person.firstName('male'),
-       yearOfBirth: 1990
-    },
-      shortName: {
-          gender: Gender.Female,
-         name: faker.string.alpha({ length: 2 }),
+    yearOfBirth: 1990
+  },
+  shortName: {
+    gender: Gender.Female,
+    name: faker.string.alpha({ length: 2 }),
     yearOfBirth: 2001
   }
 };
@@ -145,7 +145,7 @@ test('"User Name" field should not allow more than 14 characters', async () => {
 
   await test.step('Verify username is truncated to 14 characters', async () => {
     const actualUsernameValue = await addUserPage.userNameInput.inputValue();
-    // ToDo: don't forget about "magic numbers". 
+    // ToDo: don't forget about "magic numbers".
     // It's better to create const with the appropriate name(ex: userNameCharLimit or smth like this) and define here needed number and wirk with this. 
     // It also related to 'longUsername' const data
     expect(

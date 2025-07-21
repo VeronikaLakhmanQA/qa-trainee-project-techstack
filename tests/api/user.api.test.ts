@@ -1,9 +1,10 @@
 import { test, expect } from '@playwright/test';
 import { faker } from '@faker-js/faker';
 import { UserDTO } from '../../dto/userDTO';
+import { Gender } from '../../enums/gender.enum';
 import { UserApi } from '../../pages/api/user.api';
+import { expectSuccessfulResponse } from '../../utils/assertions';
 
-// ToDo: let's change tests' files fromat from spec.ts to test.ts (for all test files)
 test.describe('User API - CRUD', () => {
   let userApi: UserApi;
   let userId: number;
@@ -12,15 +13,14 @@ test.describe('User API - CRUD', () => {
     userApi = new UserApi(request, baseURL!);
 
     const newApiUser: UserDTO = {
-      // ToDo: Use here certain Gender fron enum instead of the numbers
-      gender: 1,
+      gender: Gender.Male,
       name: faker.person.firstName('male'),
       yearOfBirth: 1993
     };
 
     const result = await userApi.createUser(newApiUser);
 
-    expect(result.status(), 'Status code should be 200 when creating new user').toBe(200);
+    await expectSuccessfulResponse(result);
     const body = await result.json();
 
     userId = body.id;
@@ -28,20 +28,14 @@ test.describe('User API - CRUD', () => {
 
   test.afterEach(async () => {
     const deleteUserResponse = await userApi.deleteUser(userId);
-    expect(
-      deleteUserResponse.ok(),
-      'Expected status code should be 200 after deleting the user'
-    ).toBeTruthy();
+
+    await expectSuccessfulResponse(deleteUserResponse);
   });
 
-  // ToDo: write in one format: "Get" and "GET" shouldn't be (uppercase I liked more))
-  test('Get /api/User - should return list of users', async () => {
+  test('GET /api/User - should return list of users', async () => {
     const getUsersResponse = await userApi.getUsers();
 
-    // ToDo: you can see that you use these two line of the code not one time. 
-    // It will be great to create some kind of helper or utils folder/file to move it in the separate method there
-    expect(getUsersResponse.ok, 'Expected successful response').toBeTruthy();
-    expect(getUsersResponse.status(), 'Status code should be 200').toBe(200);
+    await expectSuccessfulResponse(getUsersResponse);
 
     const body = await getUsersResponse.json();
     expect(Array.isArray(body), 'Response body should be an array of users').toBe(true);
@@ -51,8 +45,7 @@ test.describe('User API - CRUD', () => {
   test('GET /api/User/{id} - should return a specific user', async () => {
     const getSpecificUserResponse = await userApi.getUserById(userId);
 
-    expect(getSpecificUserResponse.ok, 'Expected successful response').toBeTruthy();
-    expect(getSpecificUserResponse.status(), 'Status code should be 200').toBe(200);
+    await expectSuccessfulResponse(getSpecificUserResponse);
 
     const body = await getSpecificUserResponse.json();
     expect(body.id, 'User ID in response should match the requested userId').toBe(userId);
@@ -60,15 +53,14 @@ test.describe('User API - CRUD', () => {
 
   test('PUT /api/User/{id} - should update the user', async () => {
     const updatedApiUser: UserDTO = {
-      // ToDo: Use here certain Gender fron enum instead of the numbers
-      gender: 2,
+      gender: Gender.Female,
       name: faker.person.firstName('female'),
       yearOfBirth: 2002
     };
 
     const putApiResponse = await userApi.updateUser(userId, updatedApiUser);
 
-    expect(putApiResponse.status(), 'Status code should be 200 after updating the user').toBe(200);
+    await expectSuccessfulResponse(putApiResponse);
 
     const body = await putApiResponse.json();
     expect(body.name, 'Updated name should match the value sent in PUT request').toBe(
@@ -83,5 +75,3 @@ test.describe('User API - CRUD', () => {
     ).toBe(Number(updatedApiUser.yearOfBirth));
   });
 });
-
-export { UserApi };
