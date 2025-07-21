@@ -2,12 +2,12 @@ import { test, expect } from '@playwright/test';
 import { faker } from '@faker-js/faker';
 import AddUserPage from '../../pages/ui/addUserPage';
 import HomePage from '../../pages/ui/homePage';
-import { UserApi } from '../../pages/api/user.api';
+import { UserApi } from '../../services/api/user.api';
 import { UserDTO } from '../../dto/userDTO';
 import { Gender } from '../../enums/gender.enum';
 
 let addUserPage: AddUserPage;
-let userApi: UserApi;
+const userApi = new UserApi();
 let createdUsernames: string[] = [];
 
 //ToDo: Let's devide this file into 2 ones be logic (it's great practice to store per 4 tests into one file (guess why?))
@@ -28,24 +28,23 @@ export const testUsers: Record<string, UserDTO> = {
   }
 };
 
-test.beforeEach(async ({ page, baseURL, request }) => {
+test.beforeEach(async ({ page }) => {
   // ToDo: it's better to move page url to the separate file wth url constants(for using it in different files in the future)
-  await page.goto(`${baseURL}Forms/AddUser`);
+  await page.goto(`Forms/AddUser`);
   addUserPage = new AddUserPage(page);
-  userApi = new UserApi(request, baseURL!);
 });
 
-test.afterEach(async () => {
+test.afterEach(async ({ request }) => {
   if (!createdUsernames.length) return;
 
-  const response = await userApi.getUsers();
+  const response = await userApi.getUsers(request);
   if (response.ok()) {
     const users = await response.json();
 
     for (const name of createdUsernames) {
-      const match = users.find((users: any) => users.name === name);
+      const match = users.find((users: UserDTO) => users.name === name);
       if (match) {
-        await userApi.deleteUser(match.id);
+        await userApi.deleteUser(request, match.id);
       }
     }
   }
@@ -53,7 +52,10 @@ test.afterEach(async () => {
   createdUsernames = [];
 });
 
-test('@desktop Create new user with valid "User Name" and "Year of Birth"', async ({ page, baseURL }) => {
+test('@desktop Create new user with valid "User Name" and "Year of Birth"', async ({
+  page,
+  baseURL
+}) => {
   const homePage = new HomePage(page);
 
   // ToDo: remove these test.step in each test (we can discuss it)
@@ -67,7 +69,7 @@ test('@desktop Create new user with valid "User Name" and "Year of Birth"', asyn
   });
 
   await test.step('Verify redirection to home page', async () => {
-    // ToDo: it's not clear what we are waiting for. It's better to wait for page loading and afterward check url equalence. 
+    // ToDo: it's not clear what we are waiting for. It's better to wait for page loading and afterward check url equalence.
     // BTW, it's better to verify equality instead of containing(if we can for sure, but here I think we can)
     await page.waitForURL('**/');
     await expect(page).toHaveURL(baseURL!);
@@ -146,7 +148,7 @@ test('@desktop @mobile "User Name" field should not allow more than 14 character
   await test.step('Verify username is truncated to 14 characters', async () => {
     const actualUsernameValue = await addUserPage.userNameInput.inputValue();
     // ToDo: don't forget about "magic numbers".
-    // It's better to create const with the appropriate name(ex: userNameCharLimit or smth like this) and define here needed number and wirk with this. 
+    // It's better to create const with the appropriate name(ex: userNameCharLimit or smth like this) and define here needed number and wirk with this.
     // It also related to 'longUsername' const data
     expect(
       actualUsernameValue.length,

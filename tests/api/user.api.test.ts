@@ -2,23 +2,21 @@ import { test, expect } from '@playwright/test';
 import { faker } from '@faker-js/faker';
 import { UserDTO } from '../../dto/userDTO';
 import { Gender } from '../../enums/gender.enum';
-import { UserApi } from '../../pages/api/user.api';
+import { UserApi } from '../../services/api/user.api';
 import { expectSuccessfulResponse } from '../../utils/assertions';
 
 test.describe('@api User API - CRUD', () => {
-  let userApi: UserApi;
+  const userApi = new UserApi();
   let userId: number;
 
-  test.beforeEach(async ({ request, baseURL }) => {
-    userApi = new UserApi(request, baseURL!);
-
+  test.beforeEach(async ({ request }) => {
     const newApiUser: UserDTO = {
       gender: Gender.Male,
       name: faker.person.firstName('male'),
       yearOfBirth: 1993
     };
 
-    const result = await userApi.createUser(newApiUser);
+    const result = await userApi.createUser(request, newApiUser);
 
     await expectSuccessfulResponse(result);
     const body = await result.json();
@@ -26,14 +24,14 @@ test.describe('@api User API - CRUD', () => {
     userId = body.id;
   });
 
-  test.afterEach(async () => {
-    const deleteUserResponse = await userApi.deleteUser(userId);
+  test.afterEach(async ({ request }) => {
+    const deleteUserResponse = await userApi.deleteUser(request, userId);
 
     await expectSuccessfulResponse(deleteUserResponse);
   });
 
-  test('GET /api/User - should return list of users', async () => {
-    const getUsersResponse = await userApi.getUsers();
+  test('GET /api/User - should return list of users', async ({ request }) => {
+    const getUsersResponse = await userApi.getUsers(request);
 
     await expectSuccessfulResponse(getUsersResponse);
 
@@ -42,8 +40,8 @@ test.describe('@api User API - CRUD', () => {
     expect(body.length, 'Users array should contain at least one user').toBeGreaterThan(0);
   });
 
-  test('GET /api/User/{id} - should return a specific user', async () => {
-    const getSpecificUserResponse = await userApi.getUserById(userId);
+  test('GET /api/User/{id} - should return a specific user', async ({ request }) => {
+    const getSpecificUserResponse = await userApi.getUserById(request, userId);
 
     await expectSuccessfulResponse(getSpecificUserResponse);
 
@@ -51,14 +49,14 @@ test.describe('@api User API - CRUD', () => {
     expect(body.id, 'User ID in response should match the requested userId').toBe(userId);
   });
 
-  test('PUT /api/User/{id} - should update the user', async () => {
+  test('PUT /api/User/{id} - should update the user', async ({ request }) => {
     const updatedApiUser: UserDTO = {
       gender: Gender.Female,
       name: faker.person.firstName('female'),
       yearOfBirth: 2002
     };
 
-    const putApiResponse = await userApi.updateUser(userId, updatedApiUser);
+    const putApiResponse = await userApi.updateUser(request, userId, updatedApiUser);
 
     await expectSuccessfulResponse(putApiResponse);
 
