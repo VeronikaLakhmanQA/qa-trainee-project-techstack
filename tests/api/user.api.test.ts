@@ -61,12 +61,14 @@ test.describe('@api User API - CRUD', () => {
     await expectSuccessfulResponse(putApiResponse);
 
     const body = await putApiResponse.json();
+
     expect(body.name, 'Updated name should match the value sent in PUT request').toBe(
       updatedApiUser.name
     );
     expect(body.gender, 'Updated gender should match the value sent in PUT request').toBe(
       updatedApiUser.gender
     );
+
     expect(
       body.yearOfBirth,
       'Updated year of birth should match the value sent in PUT request'

@@ -7,13 +7,16 @@
     "lint": "eslint . --ext .js,.ts,.mjs",
     "lint:fix": "eslint . --ext .js,.ts,.mjs --fix",
     "format": "prettier --check .",
-    "format:fix": "prettier --write ."
+    "format:fix": "prettier --write .",
+    "fix": "npm run lint:fix && npm run format:fix"
   },
   "author": "",
   "license": "ISC",
   "devDependencies": {
     "@playwright/test": "^1.53.2",
-    "@types/node": "^24.0.10"
+    "@types/node": "^24.0.10",
+    "eslint": "^9.31.0",
+    "prettier": "^3.6.2"
   },
   "dependencies": {
     "@faker-js/faker": "^9.9.0",
