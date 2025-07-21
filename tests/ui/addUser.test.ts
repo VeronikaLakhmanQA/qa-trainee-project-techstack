@@ -12,9 +12,6 @@ let createdUsernames: string[] = [];
 
 //ToDo: Let's devide this file into 2 ones be logic (it's great practice to store per 4 tests into one file (guess why?))
 
-// ToDo: how does your linter work?
-// I made formatting mistakes on purpose.
-// Linter should define them and resolve(you should have possibility to do it with the certain npm script)
 export const testUsers: Record<string, UserDTO> = {
   validData: {
     gender: Gender.Male,
@@ -29,7 +26,6 @@ export const testUsers: Record<string, UserDTO> = {
 };
 
 test.beforeEach(async ({ page }) => {
-  // ToDo: it's better to move page url to the separate file wth url constants(for using it in different files in the future)
   await page.goto(`Forms/AddUser`);
   addUserPage = new AddUserPage(page);
 });
@@ -58,142 +54,87 @@ test('@desktop Create new user with valid "User Name" and "Year of Birth"', asyn
 }) => {
   const homePage = new HomePage(page);
 
-  // ToDo: remove these test.step in each test (we can discuss it)
-  await test.step('Fill in "Add User" form', async () => {
-    await addUserPage.fillUserForm(testUsers.validData);
-  });
+  await addUserPage.fillUserForm(testUsers.validData);
 
-  await test.step('Submit form', async () => {
-    await addUserPage.submitAddUserForm();
-    createdUsernames.push(testUsers.validData.name);
-  });
+  await addUserPage.submitAddUserForm();
+  createdUsernames.push(testUsers.validData.name);
 
-  await test.step('Verify redirection to home page', async () => {
-    // ToDo: it's not clear what we are waiting for. It's better to wait for page loading and afterward check url equalence.
-    // BTW, it's better to verify equality instead of containing(if we can for sure, but here I think we can)
-    await page.waitForURL('**/');
-    await expect(page).toHaveURL(baseURL!);
-  });
+  await expect(
+    homePage.mainHeading,
+    'Expect main heading "Users and Addresses" to be visible on the home page'
+  ).toBeVisible();
+  await expect(page, 'Expect redirect to home page with correct URL').toHaveURL(baseURL!);
 
-  await test.step('Verify that user was added to the table', async () => {
-    await expect(
-      homePage.userNameCells.filter({ hasText: testUsers.validData.name }).last()
-    ).toBeVisible();
-  });
+  await expect(
+    homePage.userNameCells.filter({ hasText: testUsers.validData.name }).last(),
+    `Expect user "${testUsers.validData.name}" to be visible in the users table`
+  ).toBeVisible();
 });
 
-// ToDo: it can be simplified: User is not created when user data is invalid
-// and inside the test you will add appropriate data and it wil be enaugh
-test('@desktop User is not created when "User Name" is shorter than 3 characters and "Year of Birth" is between 1900 - 2005', async () => {
-  await test.step('Fill in "Add User" form with too short username', async () => {
-    await addUserPage.fillUserForm(testUsers.shortName);
-  });
+test('@mobile User is not created when "User Name" is too short', async () => {
+  await addUserPage.fillUserForm(testUsers.shortName);
 
-  await test.step('Submit the "Add User" form', async () => {
-    await addUserPage.submitAddUserForm();
-  });
+  await addUserPage.submitAddUserForm();
 
-  await test.step('Verify validation error for short username', async () => {
-    await expect(
-      addUserPage.inputUserNameError,
-      "Invalid 'User Name' error should be visible"
-    ).toBeVisible();
-
-    // ToDo: Is it possible to use toEqual method instead?
-    expect(await addUserPage.getErrorText(addUserPage.inputUserNameError)).toContain(
-      'Name is too short'
-    );
-  });
+  await expect(
+    addUserPage.inputUserNameError,
+    "Invalid 'User Name' error should be visible"
+  ).toBeVisible();
+  expect(await addUserPage.getErrorText(addUserPage.inputUserNameError)).toEqual(
+    'Name is too short'
+  );
 });
 
 test('@desktop @mobile Should show browser error with empty "User Name" and "Year of Birth"', async () => {
-  await test.step('Submit empty "Add User" form', async () => {
-    await addUserPage.submitAddUserForm();
-  });
+  await addUserPage.submitAddUserForm();
 
-  await test.step('Validate "User Name" error message', async () => {
-    await expect(
-      addUserPage.inputUserNameError,
-      "Invalid 'User Name' error should be visible"
-    ).toBeVisible();
-    // ToDo: same as above
-    expect(await addUserPage.getErrorText(addUserPage.inputUserNameError)).toContain(
-      'Name is requried'
-    );
-  });
+  await expect(
+    addUserPage.inputUserNameError,
+    "Invalid 'User Name' error should be visible"
+  ).toBeVisible();
+  expect(await addUserPage.getErrorText(addUserPage.inputUserNameError)).toEqual(
+    'Name is requried'
+  );
 
-  await test.step('Validate "Year of Birth" error message', async () => {
-    await expect(
-      addUserPage.inputYearOfBirthError,
-      "Invalid 'Year Of Birth' error should be visible"
-    ).toBeVisible();
-    // ToDo: same as above
-    expect(await addUserPage.getErrorText(addUserPage.inputYearOfBirthError)).toContain(
-      'Year of Birth is requried'
-    );
-  });
+  await expect(
+    addUserPage.inputYearOfBirthError,
+    "Invalid 'Year Of Birth' error should be visible"
+  ).toBeVisible();
+  expect(await addUserPage.getErrorText(addUserPage.inputYearOfBirthError)).toEqual(
+    'Year of Birth is requried'
+  );
 });
 
 test('@desktop @mobile "User Name" field should not allow more than 14 characters', async () => {
-  const longUsername = faker.string.alpha({ length: 15 });
+  const userNameCharLimit = 14;
+  const longUsername = faker.string.alpha({ length: userNameCharLimit + 1 });
 
-  await test.step('Enter username longer than 14 characters', async () => {
-    await addUserPage.enterUsername(longUsername);
-  });
+  await addUserPage.enterUsername(longUsername);
 
-  await test.step('Submit the "Add User" form', async () => {
-    await addUserPage.submitAddUserForm();
-  });
+  await addUserPage.submitAddUserForm();
 
-  await test.step('Verify username is truncated to 14 characters', async () => {
-    const actualUsernameValue = await addUserPage.userNameInput.inputValue();
-    // ToDo: don't forget about "magic numbers".
-    // It's better to create const with the appropriate name(ex: userNameCharLimit or smth like this) and define here needed number and wirk with this.
-    // It also related to 'longUsername' const data
-    expect(
-      actualUsernameValue.length,
-      '"User Name" field should limit input to 14 characters'
-    ).toBeLessThanOrEqual(14);
-  });
+  const actualUsernameValue = await addUserPage.userNameInput.inputValue();
+
+  expect(
+    actualUsernameValue.length,
+    '"User Name" field should limit input to 14 characters'
+  ).toBeLessThanOrEqual(userNameCharLimit);
 });
 
-// ToDo: Validation error is shown when "Year of Birth" is less than allowed minimum
-test('@desktop @mobile Validation error is shown when "Year of Birth" is less than allowed minimum 1900', async () => {
-  await test.step('Enter year of birth less then allowed minimum 1900', async () => {
-    await addUserPage.enterYearOfBirth(1899);
-  });
+[
+  { year: 1899, description: 'less than allowed minimum 1900' },
+  { year: 2006, description: 'greater than allowed maximum 2005' }
+].forEach(({ year, description }) => {
+  test(`@desktop @mobile Validation error is shown when "Year of Birth" is: ${description}`, async () => {
+    await addUserPage.enterYearOfBirth(year);
 
-  await test.step('Submit the "Add User" form', async () => {
     await addUserPage.submitAddUserForm();
-  });
 
-  await test.step('Verify validation error for incorrect year of birth', async () => {
     await expect(
       addUserPage.inputYearOfBirthError,
-      "Invalid 'Year Of Birth' error should be visible"
+      `Validation error should be shown when year is ${year} (${description})`
     ).toBeVisible();
-    expect(await addUserPage.getErrorText(addUserPage.inputYearOfBirthError)).toContain(
-      'Not valid Year of Birth is set'
-    );
-  });
-});
-
-// ToDo: combine this and above one tests into test.each structure
-test('@mobile Validation error is shown when "Year of Birth" is greater than allowed maximum 2005', async () => {
-  await test.step('Enter year of birth more than allowed maximum 2005', async () => {
-    await addUserPage.enterYearOfBirth(2006);
-  });
-
-  await test.step('Submit the "Add User" form', async () => {
-    await addUserPage.submitAddUserForm();
-  });
-
-  await test.step('Verify validation error for incorrect year of birth', async () => {
-    await expect(
-      addUserPage.inputYearOfBirthError,
-      "Invalid 'Year Of Birth' error should be visible"
-    ).toBeVisible();
-    expect(await addUserPage.getErrorText(addUserPage.inputYearOfBirthError)).toContain(
+    expect(await addUserPage.getErrorText(addUserPage.inputYearOfBirthError)).toEqual(
       'Not valid Year of Birth is set'
     );
   });
