@@ -17,7 +17,7 @@ test.beforeEach(async ({ page }) => {
   addUserPage = new AddUserPage(page);
 });
 
-test('@desktop Should show browser error with empty "User Name" and "Year of Birth"', async () => {
+test('Should show browser error with empty "User Name" and "Year of Birth" @desktop', async () => {
   await addUserPage.submitAddUserForm();
 
   await expect(
@@ -37,9 +37,8 @@ test('@desktop Should show browser error with empty "User Name" and "Year of Bir
   );
 });
 
-test('@mobile User is not created when "User Name" is too short', async () => {
+test('User is not created when "User Name" is too short @mobile', async () => {
   await addUserPage.fillUserForm(shortName);
-
   await addUserPage.submitAddUserForm();
 
   await expect(
@@ -51,12 +50,11 @@ test('@mobile User is not created when "User Name" is too short', async () => {
   );
 });
 
-test('@desktop @mobile "User Name" field should not allow more than 14 characters', async () => {
+test('"User Name" field should not allow more than 14 characters @desktop @mobile', async () => {
   const userNameCharLimit = 14;
   const longUsername = faker.string.alpha({ length: userNameCharLimit + 1 });
 
   await addUserPage.enterUsername(longUsername);
-
   await addUserPage.submitAddUserForm();
 
   const actualUsernameValue = await addUserPage.userNameInput.inputValue();
@@ -71,9 +69,8 @@ test('@desktop @mobile "User Name" field should not allow more than 14 character
   { year: 1899, description: 'less than allowed minimum 1900' },
   { year: 2006, description: 'greater than allowed maximum 2005' }
 ].forEach(({ year, description }) => {
-  test(`@desktop @mobile Validation error is shown when "Year of Birth" is: ${description}`, async () => {
+  test(`Validation error is shown when "Year of Birth" is: ${description} @desktop @mobile`, async () => {
     await addUserPage.enterYearOfBirth(year);
-
     await addUserPage.submitAddUserForm();
 
     await expect(

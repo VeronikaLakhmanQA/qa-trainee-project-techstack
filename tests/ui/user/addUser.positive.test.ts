@@ -36,14 +36,13 @@ test.afterEach(async ({ request }) => {
   createdUsernames = [];
 });
 
-test('@desktop @mobile Create new user with valid "User Name" and "Year of Birth"', async ({
+test('Create new user with valid "User Name" and "Year of Birth" @desktop @mobile', async ({
   page,
   baseURL
 }) => {
   const homePage = new HomePage(page);
 
   await addUserPage.fillUserForm(validUser);
-
   await addUserPage.submitAddUserForm();
   createdUsernames.push(validUser.name);
 

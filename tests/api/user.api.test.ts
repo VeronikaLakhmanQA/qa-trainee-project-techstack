@@ -5,7 +5,7 @@ import { Gender } from '../../enums/gender.enum';
 import { UserApi } from '../../services/api/user.api';
 import { expectSuccessfulResponse } from '../../utils/assertions';
 
-test.describe('@api User API - CRUD', () => {
+test.describe('User API - CRUD @api', () => {
   const userApi = new UserApi();
   let userId: number;
 
@@ -55,7 +55,6 @@ test.describe('@api User API - CRUD', () => {
       name: faker.person.firstName('female'),
       yearOfBirth: 2002
     };
-
     const putApiResponse = await userApi.updateUser(request, userId, updatedApiUser);
 
     await expectSuccessfulResponse(putApiResponse);
