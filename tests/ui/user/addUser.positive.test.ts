@@ -31,7 +31,9 @@ test.afterEach(async ({ request }) => {
 
     for (const name of createdUsernames) {
       const match = users.find((user: UserDTO) => user.name === name);
-      if (match) await userApi.deleteUser(request, match.id);
+      if (match) {
+        await userApi.deleteUser(request, match.id);
+      }
     }
   }
   createdUsernames = [];

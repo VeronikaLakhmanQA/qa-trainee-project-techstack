@@ -3,7 +3,7 @@ import { faker } from '@faker-js/faker';
 import { UserDTO } from '../../dto/userDTO';
 import { Gender } from '../../enums/gender.enum';
 import { UserApi } from '../../services/api/user.api';
-import { expectSuccessfulResponse } from '../../utils/assertions';
+import { expectSuccessfulResponse } from '../../utils/api-utils';
 
 test.describe('User API - CRUD @api', () => {
   const userApi = new UserApi();
