@@ -65,10 +65,12 @@ test('"User Name" field should not allow more than 14 characters @desktop @mobil
   ).toBeLessThanOrEqual(userNameCharLimit);
 });
 
-[
+const invalidYears = [
   { year: 1899, description: 'less than allowed minimum 1900' },
   { year: 2006, description: 'greater than allowed maximum 2005' }
-].forEach(({ year, description }) => {
+];
+
+invalidYears.forEach(({ year, description }) => {
   test(`Validation error is shown when "Year of Birth" is: ${description} @desktop @mobile`, async () => {
     await addUserPage.enterYearOfBirth(year);
     await addUserPage.submitAddUserForm();
