@@ -3,6 +3,7 @@ import AddUserPage from '../../../pages/ui/addUserPage';
 import { faker } from '@faker-js/faker';
 import { Gender } from '../../../enums/gender.enum';
 import { UserDTO } from '../../../dto/userDTO';
+import { ROUTES } from '../../../utils/constants';
 
 let addUserPage: AddUserPage;
 
@@ -13,7 +14,7 @@ const shortName: UserDTO = {
 };
 
 test.beforeEach(async ({ page }) => {
-  await page.goto('Forms/AddUser');
+  await page.goto(ROUTES.ADD_USER);
   addUserPage = new AddUserPage(page);
 });
 

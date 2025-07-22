@@ -5,6 +5,7 @@ import { faker } from '@faker-js/faker';
 import { Gender } from '../../../enums/gender.enum';
 import { UserApi } from '../../../services/api/user.api';
 import { UserDTO } from '../../../dto/userDTO';
+import { ROUTES } from '../../../utils/constants';
 
 let addUserPage: AddUserPage;
 const userApi = new UserApi();
@@ -17,7 +18,7 @@ const validUser: UserDTO = {
 };
 
 test.beforeEach(async ({ page }) => {
-  await page.goto(`Forms/AddUser`);
+  await page.goto(ROUTES.ADD_USER);
   addUserPage = new AddUserPage(page);
 });
 
