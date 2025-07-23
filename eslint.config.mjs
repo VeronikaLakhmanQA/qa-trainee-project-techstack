@@ -24,7 +24,8 @@ export default defineConfig([
       }
     },
     rules: {
-      'prettier/prettier': 'error'
+      'prettier/prettier': 'error',
+      'lines-between-class-members': ['error', 'always', { exceptAfterSingleLine: true }]
     }
   },
   js.configs.recommended,

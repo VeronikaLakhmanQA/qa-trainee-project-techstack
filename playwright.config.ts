@@ -31,18 +31,17 @@ export default defineConfig({
     baseURL: 'https://traineeautomation.azurewebsites.net/',
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
     trace: 'on-first-retry',
-    //Screenshots and vadeo for all tests, including successful ones
-    // ToDo: read about comments conventions (it's related to the comment above)
-    // ToDo: make Screenshots and video only for the failed tests. It's more common implementation on the real life projects
-    screenshot: 'on',
-    video: 'on'
+    // Collect screenshots and video only for failed tests
+    screenshot: 'only-on-failure',
+    video: 'retain-on-failure'
   },
 
   /* Configure projects for major browsers */
   projects: [
     {
       name: 'chromium',
-      use: { ...devices['Desktop Chrome'] }
+      use: { ...devices['Desktop Chrome'] },
+      grep: [/@desktop/]
     },
 
     // {
@@ -58,7 +57,16 @@ export default defineConfig({
     /* Test against mobile viewport. */
     {
       name: 'Mobile Safari',
-      use: { ...devices['iPhone 15'] }
+      use: { ...devices['iPhone 15'] },
+      grep: [/@mobile/]
+    },
+
+    {
+      name: 'API',
+      grep: [/@api/],
+      use: {
+        headless: true
+      }
     }
   ]
 });

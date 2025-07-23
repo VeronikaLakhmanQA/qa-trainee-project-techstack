@@ -1,11 +1,11 @@
 import { expect, Locator, Page } from '@playwright/test';
 import { UserDTO } from '../../dto/userDTO';
+import { Gender } from '../../enums/gender.enum';
 
 export default class AddUserPage {
   readonly userNameInput: Locator;
   readonly yearOfBirthInput: Locator;
   readonly createBtn: Locator;
-
   readonly genderDropdown: Locator;
   readonly inputUserNameError: Locator;
   readonly inputYearOfBirthError: Locator;
@@ -20,17 +20,17 @@ export default class AddUserPage {
     this.inputYearOfBirthError = page.getByTestId('inputError-YearOfBirth');
   }
 
-  // ToDo: use enum type here inside a method parametr instead of number
-  // ToDO: add lb after assertions, this logic should be devided by lbs, but not add lb after each expect(it can be one after group of assertions)
-  async selectGender(genderValue: number) {
+  async selectGender(genderValue: Gender) {
     await expect(this.genderDropdown).toBeVisible();
     await expect(this.genderDropdown).toBeEnabled();
+
     await this.genderDropdown.selectOption({ value: genderValue.toString() });
   }
 
   async enterUsername(username: string) {
     await this.userNameInput.waitFor({ state: 'visible' });
     await expect(this.userNameInput, 'Username input should be enabled').toBeEnabled();
+
     await this.userNameInput.clear();
     await this.userNameInput.fill(username);
   }
@@ -38,8 +38,10 @@ export default class AddUserPage {
   async enterYearOfBirth(yearOfBirth: number) {
     await this.yearOfBirthInput.waitFor({ state: 'visible' });
     await expect(this.yearOfBirthInput, 'YearOfBirth input should be enabled').toBeEnabled();
+
     await this.yearOfBirthInput.clear();
     await this.yearOfBirthInput.fill(yearOfBirth.toString());
+
     await expect(this.yearOfBirthInput, 'YearOfBirth input should have value').toHaveValue(
       yearOfBirth.toString()
     );
@@ -48,6 +50,7 @@ export default class AddUserPage {
   async submitAddUserForm() {
     await expect(this.createBtn).toBeVisible();
     await expect(this.createBtn).toBeEnabled();
+
     await this.createBtn.click();
   }
 
@@ -57,8 +60,7 @@ export default class AddUserPage {
     await this.enterYearOfBirth(user.yearOfBirth);
   }
 
-  // ToDo: always add returned type in method signature
-  async getErrorText(errorLocator: Locator) {
+  async getErrorText(errorLocator: Locator): Promise<string | null> {
     return await errorLocator.textContent();
   }
 }
