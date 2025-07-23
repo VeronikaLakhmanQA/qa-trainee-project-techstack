@@ -17,22 +17,19 @@ test.describe('User API - CRUD @api', () => {
     };
 
     const result = await userApi.createUser(request, newApiUser);
-
     await expectSuccessfulResponse(result);
-    const body = await result.json();
 
+    const body = await result.json();
     userId = body.id;
   });
 
   test.afterEach(async ({ request }) => {
     const deleteUserResponse = await userApi.deleteUser(request, userId);
-
     await expectSuccessfulResponse(deleteUserResponse);
   });
 
   test('GET /api/User - should return list of users', async ({ request }) => {
     const getUsersResponse = await userApi.getUsers(request);
-
     await expectSuccessfulResponse(getUsersResponse);
 
     const body = await getUsersResponse.json();
@@ -42,7 +39,6 @@ test.describe('User API - CRUD @api', () => {
 
   test('GET /api/User/{id} - should return a specific user', async ({ request }) => {
     const getSpecificUserResponse = await userApi.getUserById(request, userId);
-
     await expectSuccessfulResponse(getSpecificUserResponse);
 
     const body = await getSpecificUserResponse.json();
@@ -55,19 +51,17 @@ test.describe('User API - CRUD @api', () => {
       name: faker.person.firstName('female'),
       yearOfBirth: 2002
     };
-    const putApiResponse = await userApi.updateUser(request, userId, updatedApiUser);
 
+    const putApiResponse = await userApi.updateUser(request, userId, updatedApiUser);
     await expectSuccessfulResponse(putApiResponse);
 
     const body = await putApiResponse.json();
-
     expect(body.name, 'Updated name should match the value sent in PUT request').toBe(
       updatedApiUser.name
     );
     expect(body.gender, 'Updated gender should match the value sent in PUT request').toBe(
       updatedApiUser.gender
     );
-
     expect(
       body.yearOfBirth,
       'Updated year of birth should match the value sent in PUT request'
