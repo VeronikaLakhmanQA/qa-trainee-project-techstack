@@ -5,7 +5,7 @@ import { faker } from '@faker-js/faker';
 import { Gender } from '../../../enums/gender.enum';
 import { UserApi } from '../../../services/api/user.api';
 import { UserDTO } from '../../../dto/userDTO';
-import { ROUTES } from '../../../utils/constants';
+import { BASE_URL, ROUTES } from '../../../utils/constants';
 
 let addUserPage: AddUserPage;
 const userApi = new UserApi();
@@ -40,8 +40,7 @@ test.afterEach(async ({ request }) => {
 });
 
 test('Create new user with valid "User Name" and "Year of Birth" @desktop @mobile', async ({
-  page,
-  baseURL
+  page
 }) => {
   const homePage = new HomePage(page);
 
@@ -53,7 +52,7 @@ test('Create new user with valid "User Name" and "Year of Birth" @desktop @mobil
     homePage.mainHeading,
     'Expect main heading "Users and Addresses" to be visible on the home page'
   ).toBeVisible();
-  await expect(page, 'Expect redirect to home page with correct URL').toHaveURL(baseURL!);
+  await expect(page, 'Expect redirect to home page with correct URL').toHaveURL(BASE_URL!);
 
   await expect(
     homePage.userNameCells.filter({ hasText: validUser.name }).last(),
