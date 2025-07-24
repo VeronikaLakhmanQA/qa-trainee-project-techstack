@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test';
-import AddUserPage from '../../../pages/ui/addUserPage';
+import AddUserPage from '../../../pages/addUserPage';
 import { faker } from '@faker-js/faker';
 import { Gender } from '../../../enums/gender.enum';
 import { UserDTO } from '../../../dto/userDTO';

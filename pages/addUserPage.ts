@@ -1,6 +1,6 @@
 import { expect, Locator, Page } from '@playwright/test';
-import { UserDTO } from '../../dto/userDTO';
-import { Gender } from '../../enums/gender.enum';
+import { UserDTO } from '../dto/userDTO';
+import { Gender } from '../enums/gender.enum';
 
 export default class AddUserPage {
   readonly userNameInput: Locator;
@@ -47,6 +47,12 @@ export default class AddUserPage {
     );
   }
 
+  async fillUserForm(user: UserDTO) {
+    await this.selectGender(user.gender);
+    await this.enterUsername(user.name);
+    await this.enterYearOfBirth(user.yearOfBirth);
+  }
+
   async submitAddUserForm() {
     await expect(this.createBtn).toBeVisible();
     await expect(this.createBtn).toBeEnabled();
@@ -54,10 +60,9 @@ export default class AddUserPage {
     await this.createBtn.click();
   }
 
-  async fillUserForm(user: UserDTO) {
-    await this.selectGender(user.gender);
-    await this.enterUsername(user.name);
-    await this.enterYearOfBirth(user.yearOfBirth);
+  async createUser(user: UserDTO) {
+    await this.fillUserForm(user);
+    await this.submitAddUserForm();
   }
 
   async getErrorText(errorLocator: Locator): Promise<string | null> {

@@ -1,0 +1,74 @@
+import { expect, test } from '@playwright/test';
+import { faker } from '@faker-js/faker';
+import AddAddressPage from '../../../pages/addAddressPage';
+import HomePage from '../../../pages/homePage';
+import { AddressDTO } from '../../../dto/addressDTO';
+import { BASE_URL, ROUTES } from '../../../utils/constants';
+import { AddressSteps } from '../../../steps/addressSteps';
+import DeleteAddressPage from '../../../pages/deleteAddressPage';
+
+let addAddressPage: AddAddressPage;
+let createdStreetAddresses: string[] = [];
+
+const positiveAddresses: { data: AddressDTO; description: string }[] = [
+  {
+    description: 'with valid random data',
+    data: {
+      streetAddress: faker.location.streetAddress(),
+      city: faker.location.city(),
+      state: faker.location.state(),
+      zipCode: faker.number.int({ min: 10000, max: 99999 })
+    }
+  },
+  {
+    description: 'minimum allowed field lengths',
+    data: {
+      streetAddress: '12345',
+      city: 'Abc',
+      state: 'CA',
+      zipCode: faker.number.int({ min: 10000, max: 99999 })
+    }
+  },
+  {
+    description: 'maximum allowed field lengths',
+    data: {
+      streetAddress: 'S'.repeat(30),
+      city: 'C'.repeat(15),
+      state: 'S'.repeat(15),
+      zipCode: faker.number.int({ min: 10000, max: 99999 })
+    }
+  }
+];
+
+test.beforeEach(async ({ page }) => {
+  await page.goto(ROUTES.ADD_ADDRESS);
+  addAddressPage = new AddAddressPage(page);
+});
+
+test.afterEach(async ({ page }) => {
+  const homePage = new HomePage(page);
+  const deleteAddressPage = new DeleteAddressPage(page);
+  const addressSteps = new AddressSteps(homePage, deleteAddressPage);
+
+  if (!createdStreetAddresses.length) return;
+
+  for (const street of createdStreetAddresses) {
+    await addressSteps.deleteAddressByStreet(street);
+  }
+  createdStreetAddresses = [];
+});
+
+positiveAddresses.forEach(({ data, description }) => {
+  test(`Should create a new address with ${description} @desktop`, async ({ page }) => {
+    const homePage = new HomePage(page);
+
+    await addAddressPage.createAddress(data);
+    createdStreetAddresses.push(data.streetAddress);
+
+    await expect(
+      homePage.mainHeading,
+      'Expect main heading "Users and Addresses" to be visible on the home page'
+    ).toBeVisible();
+    await expect(page, 'Expect redirect to home page with correct URL').toHaveURL(BASE_URL!);
+  });
+});
