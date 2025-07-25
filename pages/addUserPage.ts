@@ -1,6 +1,7 @@
 import { expect, Locator, Page } from '@playwright/test';
-import { UserDTO } from '../../dto/userDTO';
-import { Gender } from '../../enums/gender.enum';
+import { UserDTO } from '../dto/userDTO';
+import { Gender } from '../enums/gender.enum';
+import { fillInput } from '../utils/form.utils';
 
 export default class AddUserPage {
   readonly userNameInput: Locator;
@@ -28,23 +29,21 @@ export default class AddUserPage {
   }
 
   async enterUsername(username: string) {
-    await this.userNameInput.waitFor({ state: 'visible' });
-    await expect(this.userNameInput, 'Username input should be enabled').toBeEnabled();
-
-    await this.userNameInput.clear();
-    await this.userNameInput.fill(username);
+    await fillInput(this.userNameInput, username, 'Username');
   }
 
   async enterYearOfBirth(yearOfBirth: number) {
-    await this.yearOfBirthInput.waitFor({ state: 'visible' });
-    await expect(this.yearOfBirthInput, 'YearOfBirth input should be enabled').toBeEnabled();
-
-    await this.yearOfBirthInput.clear();
-    await this.yearOfBirthInput.fill(yearOfBirth.toString());
+    await fillInput(this.yearOfBirthInput, yearOfBirth, 'YearOfBirth');
 
     await expect(this.yearOfBirthInput, 'YearOfBirth input should have value').toHaveValue(
       yearOfBirth.toString()
     );
+  }
+
+  async fillUserForm(user: UserDTO) {
+    await this.selectGender(user.gender);
+    await this.enterUsername(user.name);
+    await this.enterYearOfBirth(user.yearOfBirth);
   }
 
   async submitAddUserForm() {
@@ -54,13 +53,8 @@ export default class AddUserPage {
     await this.createBtn.click();
   }
 
-  async fillUserForm(user: UserDTO) {
-    await this.selectGender(user.gender);
-    await this.enterUsername(user.name);
-    await this.enterYearOfBirth(user.yearOfBirth);
-  }
-
-  async getErrorText(errorLocator: Locator): Promise<string | null> {
-    return await errorLocator.textContent();
+  async createUser(user: UserDTO) {
+    await this.fillUserForm(user);
+    await this.submitAddUserForm();
   }
 }

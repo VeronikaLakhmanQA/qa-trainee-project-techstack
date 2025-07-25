@@ -1,9 +1,9 @@
 import { test, expect } from '@playwright/test';
-import AddUserPage from '../../../pages/ui/addUserPage';
-import HomePage from '../../../pages/ui/homePage';
+import AddUserPage from '../../../pages/addUserPage';
+import HomePage from '../../../pages/homePage';
 import { faker } from '@faker-js/faker';
 import { Gender } from '../../../enums/gender.enum';
-import { UserApi } from '../../../services/api/user.api';
+import { UserApi } from '../../../api/user.api';
 import { UserDTO } from '../../../dto/userDTO';
 import { BASE_URL, ROUTES } from '../../../utils/constants';
 
@@ -44,8 +44,7 @@ test('Create new user with valid "User Name" and "Year of Birth" @desktop @mobil
 }) => {
   const homePage = new HomePage(page);
 
-  await addUserPage.fillUserForm(validUser);
-  await addUserPage.submitAddUserForm();
+  await addUserPage.createUser(validUser);
   createdUsernames.push(validUser.name);
 
   await expect(

@@ -1,6 +1,6 @@
 import { APIRequestContext, APIResponse } from '@playwright/test';
-import { UserDTO } from '../../dto/userDTO';
-import { BASE_URL } from '../../utils/constants';
+import { UserDTO } from '../dto/userDTO';
+import { BASE_URL } from '../utils/constants';
 
 const USER_API_PATH = `${BASE_URL}api/User`;
 
