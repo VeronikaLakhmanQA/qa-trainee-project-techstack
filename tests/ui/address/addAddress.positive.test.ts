@@ -23,18 +23,18 @@ const positiveAddresses: { data: AddressDTO; description: string }[] = [
   {
     description: 'minimum allowed field lengths',
     data: {
-      streetAddress: '12345',
-      city: 'Abc',
-      state: 'CA',
+      streetAddress: faker.string.alpha({ length: 5 }),
+      city: faker.string.alpha({ length: 3 }),
+      state: faker.string.alpha({ length: 2 }),
       zipCode: faker.number.int({ min: 10000, max: 99999 })
     }
   },
   {
     description: 'maximum allowed field lengths',
     data: {
-      streetAddress: 'S'.repeat(30),
-      city: 'C'.repeat(15),
-      state: 'S'.repeat(15),
+      streetAddress: faker.string.alpha({ length: 30 }),
+      city: faker.string.alpha({ length: 15 }),
+      state: faker.string.alpha({ length: 15 }),
       zipCode: faker.number.int({ min: 10000, max: 99999 })
     }
   }
@@ -69,6 +69,7 @@ positiveAddresses.forEach(({ data, description }) => {
       homePage.mainHeading,
       'Expect main heading "Users and Addresses" to be visible on the home page'
     ).toBeVisible();
+
     await expect(page, 'Expect redirect to home page with correct URL').toHaveURL(BASE_URL!);
   });
 });

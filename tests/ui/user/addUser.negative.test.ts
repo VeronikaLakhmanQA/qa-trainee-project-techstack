@@ -4,6 +4,7 @@ import { faker } from '@faker-js/faker';
 import { Gender } from '../../../enums/gender.enum';
 import { UserDTO } from '../../../dto/userDTO';
 import { ROUTES } from '../../../utils/constants';
+import { getErrorText } from '../../../utils/form.utils';
 
 let addUserPage: AddUserPage;
 
@@ -25,15 +26,13 @@ test('Should show browser error with empty "User Name" and "Year of Birth" @desk
     addUserPage.inputUserNameError,
     "Invalid 'User Name' error should be visible"
   ).toBeVisible();
-  expect(await addUserPage.getErrorText(addUserPage.inputUserNameError)).toEqual(
-    'Name is requried'
-  );
+  expect(await getErrorText(addUserPage.inputUserNameError)).toEqual('Name is requried');
 
   await expect(
     addUserPage.inputYearOfBirthError,
     "Invalid 'Year Of Birth' error should be visible"
   ).toBeVisible();
-  expect(await addUserPage.getErrorText(addUserPage.inputYearOfBirthError)).toEqual(
+  expect(await getErrorText(addUserPage.inputYearOfBirthError)).toEqual(
     'Year of Birth is requried'
   );
 });
@@ -46,9 +45,7 @@ test('User is not created when "User Name" is too short @mobile', async () => {
     addUserPage.inputUserNameError,
     "Invalid 'User Name' error should be visible"
   ).toBeVisible();
-  expect(await addUserPage.getErrorText(addUserPage.inputUserNameError)).toEqual(
-    'Name is too short'
-  );
+  expect(await getErrorText(addUserPage.inputUserNameError)).toEqual('Name is too short');
 });
 
 test('"User Name" field should not allow more than 14 characters @desktop @mobile', async () => {
@@ -80,7 +77,7 @@ invalidYears.forEach(({ year, description }) => {
       addUserPage.inputYearOfBirthError,
       `Validation error should be shown when year is ${year} (${description})`
     ).toBeVisible();
-    expect(await addUserPage.getErrorText(addUserPage.inputYearOfBirthError)).toEqual(
+    expect(await getErrorText(addUserPage.inputYearOfBirthError)).toEqual(
       'Not valid Year of Birth is set'
     );
   });
