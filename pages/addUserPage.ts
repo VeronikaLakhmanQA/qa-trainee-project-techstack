@@ -28,22 +28,10 @@ export default class AddUserPage {
     await this.genderDropdown.selectOption({ value: genderValue.toString() });
   }
 
-  async enterUsername(username: string) {
-    await fillInput(this.userNameInput, username, 'Username');
-  }
-
-  async enterYearOfBirth(yearOfBirth: number) {
-    await fillInput(this.yearOfBirthInput, yearOfBirth, 'YearOfBirth');
-
-    await expect(this.yearOfBirthInput, 'YearOfBirth input should have value').toHaveValue(
-      yearOfBirth.toString()
-    );
-  }
-
   async fillUserForm(user: UserDTO) {
     await this.selectGender(user.gender);
-    await this.enterUsername(user.name);
-    await this.enterYearOfBirth(user.yearOfBirth);
+    await fillInput(this.userNameInput, user.name, 'Username');
+    await fillInput(this.yearOfBirthInput, user.yearOfBirth, 'YearOfBirth');
   }
 
   async submitAddUserForm() {

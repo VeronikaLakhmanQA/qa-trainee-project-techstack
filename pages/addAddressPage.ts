@@ -28,27 +28,11 @@ export default class AddAddressPage {
     this.zipCodeError = page.getByTestId('inputError-ZipCode');
   }
 
-  async enterStreetAddress(streetAddress: string) {
-    await fillInput(this.streetAddressInput, streetAddress, 'Street Address');
-  }
-
-  async enterCity(city: string) {
-    await fillInput(this.cityInput, city, 'City');
-  }
-
-  async enterState(state: string) {
-    await fillInput(this.stateInput, state, 'State');
-  }
-
-  async enterZipCode(zipCode: number | string) {
-    await fillInput(this.zipCodeInput, zipCode, 'ZipCode');
-  }
-
   async fillAddressForm(address: AddressDTO) {
-    await this.enterStreetAddress(address.streetAddress);
-    await this.enterCity(address.city);
-    await this.enterState(address.state);
-    await this.enterZipCode(address.zipCode);
+    await fillInput(this.streetAddressInput, address.streetAddress, 'Street Address');
+    await fillInput(this.cityInput, address.city, 'City');
+    await fillInput(this.stateInput, address.state, 'State');
+    await fillInput(this.zipCodeInput, address.zipCode, 'ZipCode');
   }
 
   async submitAddAddressForm() {
