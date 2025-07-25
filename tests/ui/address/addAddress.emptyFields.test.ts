@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test';
 import AddAddressPage from '../../../pages/addAddressPage';
 import { ROUTES } from '../../../utils/constants';
-import { getErrorText } from '../../../utils/form.utils';
+import { getErrorText } from '../../../steps/genericSteps';
 import { generateValidAddress } from '../../../utils/dataGenerators';
 
 let addAddressPage: AddAddressPage;

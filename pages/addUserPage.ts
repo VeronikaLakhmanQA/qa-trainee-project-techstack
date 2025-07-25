@@ -1,7 +1,7 @@
 import { expect, Locator, Page } from '@playwright/test';
 import { UserDTO } from '../dto/userDTO';
 import { Gender } from '../enums/gender.enum';
-import { fillInput } from '../utils/form.utils';
+import { fillInput } from '../steps/genericSteps';
 
 export default class AddUserPage {
   readonly userNameInput: Locator;
@@ -26,6 +26,14 @@ export default class AddUserPage {
     await expect(this.genderDropdown).toBeEnabled();
 
     await this.genderDropdown.selectOption({ value: genderValue.toString() });
+  }
+
+  async enterUsername(name: string) {
+    await fillInput(this.userNameInput, name, 'Username');
+  }
+
+  async enterYearOfBirth(yearOfBirth: number) {
+    await fillInput(this.yearOfBirthInput, yearOfBirth, 'YearOfBirth');
   }
 
   async fillUserForm(user: UserDTO) {

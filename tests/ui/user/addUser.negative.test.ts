@@ -4,7 +4,7 @@ import { faker } from '@faker-js/faker';
 import { Gender } from '../../../enums/gender.enum';
 import { UserDTO } from '../../../dto/userDTO';
 import { ROUTES } from '../../../utils/constants';
-import { getErrorText } from '../../../utils/form.utils';
+import { getErrorText } from '../../../steps/genericSteps';
 
 let addUserPage: AddUserPage;
 

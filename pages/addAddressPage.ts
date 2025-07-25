@@ -1,6 +1,6 @@
 import { expect, Locator, Page } from '@playwright/test';
 import { AddressDTO } from '../dto/addressDTO';
-import { fillInput } from '../utils/form.utils';
+import { fillInput } from '../steps/genericSteps';
 
 export default class AddAddressPage {
   readonly streetAddressInput: Locator;
