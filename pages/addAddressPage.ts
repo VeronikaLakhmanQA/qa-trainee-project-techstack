@@ -9,6 +9,11 @@ export default class AddAddressPage {
   readonly zipCodeInput: Locator;
   readonly createButton: Locator;
 
+  readonly streetAddressError: Locator;
+  readonly cityError: Locator;
+  readonly stateError: Locator;
+  readonly zipCodeError: Locator;
+
   constructor(public page: Page) {
     this.page = page;
     this.streetAddressInput = page.getByTestId('input-StreetAddress');
@@ -16,6 +21,11 @@ export default class AddAddressPage {
     this.stateInput = page.getByTestId('input-State');
     this.zipCodeInput = page.getByTestId('input-ZipCode');
     this.createButton = page.getByTestId('button-Create');
+
+    this.streetAddressError = page.getByTestId('inputError-StreetAddress');
+    this.cityError = page.getByTestId('inputError-City');
+    this.stateError = page.getByTestId('inputError-State');
+    this.zipCodeError = page.getByTestId('inputError-ZipCode');
   }
 
   async enterStreetAddress(streetAddress: string) {
@@ -30,7 +40,7 @@ export default class AddAddressPage {
     await fillInput(this.stateInput, state, 'State');
   }
 
-  async enterZipCode(zipCode: number) {
+  async enterZipCode(zipCode: number | string) {
     await fillInput(this.zipCodeInput, zipCode, 'ZipCode');
   }
 
