@@ -61,14 +61,3 @@ test('should show error when zip code is empty @desktop', async () => {
   const errorText = await GenericSteps.getErrorText(addAddressPage.zipCodeError);
   expect(errorText).toBe('Zip Code is required');
 });
-
-test.skip('skipped test @desktop', async () => {});
-
-test('failed test @desktop', async () => {
-  const address = generateValidAddress({ zipCode: '' });
-
-  await addressSteps.createAddress(address);
-
-  const errorText = await GenericSteps.getErrorText(addAddressPage.zipCodeError);
-  expect(errorText).toBe('Zip Code is incorrect');
-});
