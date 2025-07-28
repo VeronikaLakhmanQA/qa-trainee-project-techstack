@@ -1,16 +1,19 @@
 import { test, expect, Locator } from '@playwright/test';
 import AddAddressPage from '../../../pages/addAddressPage';
 import { ROUTES } from '../../../utils/constants';
-import { getErrorText } from '../../../steps/genericSteps';
+import { GenericSteps } from '../../../steps/genericSteps';
 import { generateValidAddress } from '../../../utils/dataGenerator';
 import { faker } from '@faker-js/faker';
 import { AddressDTO } from '../../../dto/addressDTO';
+import { AddressSteps } from '../../../steps/addressSteps';
 
 let addAddressPage: AddAddressPage;
+let addressSteps: AddressSteps;
 
 test.beforeEach(async ({ page }) => {
   await page.goto(ROUTES.ADD_ADDRESS);
   addAddressPage = new AddAddressPage(page);
+  addressSteps = new AddressSteps(page);
 });
 
 type FieldValidationCase = {
@@ -26,7 +29,7 @@ function runFieldValidationTests(groupName: string, testCases: FieldValidationCa
         let expectedError: string;
 
         const address = generateValidAddress(override);
-        await addAddressPage.createAddress(address);
+        await addressSteps.createAddress(address);
 
         if (groupName.toLowerCase().includes('empty required fields')) {
           expectedError = `${fieldName} is required`;
@@ -34,7 +37,7 @@ function runFieldValidationTests(groupName: string, testCases: FieldValidationCa
           expectedError = `${fieldName} is too short`;
         }
 
-        const errorText = await getErrorText(error(addAddressPage));
+        const errorText = await GenericSteps.getErrorText(error(addAddressPage));
         expect(errorText).toBe(expectedError);
       });
     });

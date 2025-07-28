@@ -1,16 +1,40 @@
 import { expect, Page } from '@playwright/test';
-import DeleteAddressPage from '../pages/deleteAddressPage';
 import HomePage from '../pages/homePage';
 import { Buttons } from '../identifiers/buttons';
+import AddAddressPage from '../pages/addAddressPage';
+import { GenericSteps } from '../steps/genericSteps';
+import { AddressDTO } from '../dto/addressDTO';
 
 export class AddressSteps {
   readonly homePage: HomePage;
-  readonly deleteAddressPage: DeleteAddressPage;
+  private readonly addAddressPage: AddAddressPage;
 
   constructor(public page: Page) {
     this.page = page;
     this.homePage = new HomePage(this.page);
-    this.deleteAddressPage = new DeleteAddressPage(this.page);
+    this.addAddressPage = new AddAddressPage(page);
+  }
+
+  async fillAddressForm(address: AddressDTO) {
+    await GenericSteps.fillInput(
+      this.addAddressPage.streetAddressInput,
+      address.streetAddress,
+      'Street Address'
+    );
+    await GenericSteps.fillInput(this.addAddressPage.cityInput, address.city, 'City');
+    await GenericSteps.fillInput(this.addAddressPage.stateInput, address.state, 'State');
+    await GenericSteps.fillInput(this.addAddressPage.zipCodeInput, address.zipCode, 'ZipCode');
+  }
+
+  async submitAddAddressForm() {
+    await expect(this.page.getByTestId(Buttons.Create)).toBeVisible();
+    await expect(this.page.getByTestId(Buttons.Create)).toBeEnabled();
+    await this.page.getByTestId(Buttons.Create).click();
+  }
+
+  async createAddress(address: AddressDTO) {
+    await this.fillAddressForm(address);
+    await this.submitAddAddressForm();
   }
 
   async clickDeleteAddressBtnByStreet(streetAddress: string) {
@@ -30,9 +54,9 @@ export class AddressSteps {
   async deleteAddressByStreet(streetAddress: string) {
     await this.clickDeleteAddressBtnByStreet(streetAddress);
 
-    await expect(this.deleteAddressPage.confirmButton).toBeVisible();
-    await expect(this.deleteAddressPage.confirmButton).toBeEnabled();
-    await this.deleteAddressPage.confirmButton.click();
+    expect(this.page.getByTestId(Buttons.ConfirmButton)).toBeVisible();
+    expect(this.page.getByTestId(Buttons.ConfirmButton)).toBeEnabled();
+    await this.page.getByTestId(Buttons.ConfirmButton).click();
 
     await expect(
       this.homePage.addressStreetCells.filter({ hasText: streetAddress }),

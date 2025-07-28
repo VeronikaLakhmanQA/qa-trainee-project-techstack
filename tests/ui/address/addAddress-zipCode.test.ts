@@ -1,14 +1,17 @@
 import { test, expect } from '@playwright/test';
 import AddAddressPage from '../../../pages/addAddressPage';
 import { ROUTES } from '../../../utils/constants';
-import { getErrorText } from '../../../steps/genericSteps';
+import { GenericSteps } from '../../../steps/genericSteps';
 import { generateValidAddress } from '../../../utils/dataGenerator';
+import { AddressSteps } from '../../../steps/addressSteps';
 
 let addAddressPage: AddAddressPage;
+let addressSteps: AddressSteps;
 
 test.beforeEach(async ({ page }) => {
   await page.goto(ROUTES.ADD_ADDRESS);
   addAddressPage = new AddAddressPage(page);
+  addressSteps = new AddressSteps(page);
 });
 
 test.describe('Zip Code - valid formats @desktop', () => {
@@ -16,10 +19,10 @@ test.describe('Zip Code - valid formats @desktop', () => {
 
   validZipCodes.forEach((zip) => {
     test(`should accept valid zip code: "${zip}"`, async () => {
-      await addAddressPage.fillZipCode(zip);
-      await addAddressPage.submitAddAddressForm();
+      await GenericSteps.fillInput(addAddressPage.zipCodeInput, zip, 'ZipCode');
+      await addressSteps.submitAddAddressForm();
 
-      const errorText = await getErrorText(addAddressPage.zipCodeError);
+      const errorText = await GenericSteps.getErrorText(addAddressPage.zipCodeError);
       expect(errorText).toBe('');
     });
   });
@@ -32,8 +35,8 @@ test.describe('Zip Code - invalid formats @desktop', () => {
     test(`should show error for invalid zip code: "${zip}"`, async () => {
       const address = generateValidAddress({ zipCode: zip });
 
-      await addAddressPage.createAddress(address);
-      const errorText = await getErrorText(addAddressPage.zipCodeError);
+      await addressSteps.createAddress(address);
+      const errorText = await GenericSteps.getErrorText(addAddressPage.zipCodeError);
 
       const expectedError = zip === '' ? 'Zip Code is required' : 'Zip Code is incorrect';
 

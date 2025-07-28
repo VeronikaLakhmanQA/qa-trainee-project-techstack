@@ -1,13 +1,14 @@
 import { test, expect } from '@playwright/test';
-import AddUserPage from '../../../pages/addUserPage';
 import HomePage from '../../../pages/homePage';
 import { faker } from '@faker-js/faker';
 import { Gender } from '../../../enums/gender.enum';
 import { UserApi } from '../../../api/user.api';
 import { UserDTO } from '../../../dto/userDTO';
 import { BASE_URL, ROUTES } from '../../../utils/constants';
+import { UserSteps } from '../../../steps/userSteps';
 
-let addUserPage: AddUserPage;
+let userSteps: UserSteps;
+
 const userApi = new UserApi();
 let createdUsernames: string[] = [];
 
@@ -19,7 +20,7 @@ const validUser: UserDTO = {
 
 test.beforeEach(async ({ page }) => {
   await page.goto(ROUTES.ADD_USER);
-  addUserPage = new AddUserPage(page);
+  userSteps = new UserSteps(page);
 });
 
 test.afterEach(async ({ request }) => {
@@ -44,7 +45,7 @@ test('create new user with valid "User Name" and "Year of Birth" @desktop @mobil
 }) => {
   const homePage = new HomePage(page);
 
-  await addUserPage.createUser(validUser);
+  await userSteps.createUser(validUser);
   createdUsernames.push(validUser.name);
 
   await expect(

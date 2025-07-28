@@ -1,18 +1,18 @@
 import { expect, test } from '@playwright/test';
 import { faker } from '@faker-js/faker';
-import AddAddressPage from '../../../pages/addAddressPage';
 import HomePage from '../../../pages/homePage';
 import { AddressDTO } from '../../../dto/addressDTO';
 import { BASE_URL, ROUTES } from '../../../utils/constants';
-import { AddressSteps } from '../../../steps/addressSteps';
 import { generateValidAddress } from '../../../utils/dataGenerator';
+import { AddressSteps } from '../../../steps/addressSteps';
 
-let addAddressPage: AddAddressPage;
+let addressSteps: AddressSteps;
+
 let createdStreetAddresses: string[] = [];
 
 test.beforeEach(async ({ page }) => {
   await page.goto(ROUTES.ADD_ADDRESS);
-  addAddressPage = new AddAddressPage(page);
+  addressSteps = new AddressSteps(page);
 });
 
 test.afterEach(async ({ page }) => {
@@ -55,7 +55,7 @@ positiveAddresses.forEach(({ data, description }) => {
   test(`should create a new address with ${description} @desktop`, async ({ page }) => {
     const homePage = new HomePage(page);
 
-    await addAddressPage.createAddress(data);
+    await addressSteps.createAddress(data);
     createdStreetAddresses.push(data.streetAddress);
 
     await expect(
