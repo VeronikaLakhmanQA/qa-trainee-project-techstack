@@ -1,10 +1,9 @@
-import { test, expect, Locator } from '@playwright/test';
+import { test, expect } from '@playwright/test';
 import AddAddressPage from '../../../pages/addAddressPage';
 import { ROUTES } from '../../../utils/constants';
 import { GenericSteps } from '../../../steps/genericSteps';
 import { generateValidAddress } from '../../../utils/dataGenerator';
 import { faker } from '@faker-js/faker';
-import { AddressDTO } from '../../../dto/addressDTO';
 import { AddressSteps } from '../../../steps/addressSteps';
 
 let addAddressPage: AddAddressPage;
@@ -15,34 +14,6 @@ test.beforeEach(async ({ page }) => {
   addAddressPage = new AddAddressPage(page);
   addressSteps = new AddressSteps(page);
 });
-
-type FieldValidationCase = {
-  fieldName: string;
-  override: Partial<AddressDTO>;
-  error: (page: AddAddressPage) => Locator;
-};
-
-function runFieldValidationTests(groupName: string, testCases: FieldValidationCase[]) {
-  test.describe(groupName, () => {
-    testCases.forEach(({ fieldName, override, error }) => {
-      test(`Should show error when ${fieldName} is invalid @desktop`, async () => {
-        let expectedError: string;
-
-        const address = generateValidAddress(override);
-        await addressSteps.createAddress(address);
-
-        if (groupName.toLowerCase().includes('empty required fields')) {
-          expectedError = `${fieldName} is required`;
-        } else {
-          expectedError = `${fieldName} is too short`;
-        }
-
-        const errorText = await GenericSteps.getErrorText(error(addAddressPage));
-        expect(errorText).toBe(expectedError);
-      });
-    });
-  });
-}
 
 const emptyRequiredFields = [
   {
@@ -62,6 +33,17 @@ const emptyRequiredFields = [
   }
 ];
 
+emptyRequiredFields.forEach(({ fieldName, override, error }) => {
+  test(`should show error when ${fieldName} is empty @desktop`, async () => {
+    const address = { ...generateValidAddress(), ...override };
+    await addressSteps.createAddress(address);
+
+    const errorText = await GenericSteps.getErrorText(error(addAddressPage));
+    const expectedError = `${fieldName} is required`;
+    expect(errorText).toEqual(expectedError);
+  });
+});
+
 const tooShortFields = [
   {
     fieldName: 'Street Address',
@@ -80,5 +62,13 @@ const tooShortFields = [
   }
 ];
 
-runFieldValidationTests('Empty required fields', emptyRequiredFields);
-runFieldValidationTests('Too short values', tooShortFields);
+tooShortFields.forEach(({ fieldName, override, error }) => {
+  test(`should show error when ${fieldName} is too short @desktop`, async () => {
+    const address = { ...generateValidAddress(), ...override };
+    await addressSteps.createAddress(address);
+
+    const errorText = await GenericSteps.getErrorText(error(addAddressPage));
+    const expectedError = `${fieldName} is too short`;
+    expect(errorText).toEqual(expectedError);
+  });
+});
