@@ -1,0 +1,4 @@
+export class Buttons {
+  static readonly Create = 'button-Create';
+  static readonly Delete = 'button-Delete';
+}

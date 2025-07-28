@@ -1,6 +1,7 @@
 import { expect, Page } from '@playwright/test';
 import DeleteAddressPage from '../pages/deleteAddressPage';
 import HomePage from '../pages/homePage';
+import { Buttons } from '../identifiers/buttons';
 
 export class AddressSteps {
   readonly homePage: HomePage;
@@ -21,7 +22,7 @@ export class AddressSteps {
 
     await expect(row, `Address with street "${streetAddress}" should exist`).toBeVisible();
 
-    const deleteButton = row.getByTestId('button-Delete');
+    const deleteButton = row.getByTestId(Buttons.Delete);
     await expect(deleteButton, 'Delete button should be visible').toBeVisible();
     await deleteButton.click();
   }

@@ -2,6 +2,7 @@ import { expect, Locator, Page } from '@playwright/test';
 import { UserDTO } from '../dto/userDTO';
 import { Gender } from '../enums/gender.enum';
 import { fillInput } from '../steps/genericSteps';
+import { Buttons } from '../identifiers/buttons';
 
 export default class AddUserPage {
   readonly userNameInput: Locator;
@@ -15,7 +16,7 @@ export default class AddUserPage {
     this.page = page;
     this.userNameInput = page.getByTestId('input-UserName');
     this.yearOfBirthInput = page.getByTestId('input-YearOfBirth');
-    this.createBtn = page.getByTestId('button-Create');
+    this.createBtn = page.getByTestId(Buttons.Create);
     this.genderDropdown = page.getByTestId('select-Gender');
     this.inputUserNameError = page.getByTestId('inputError-UserName');
     this.inputYearOfBirthError = page.getByTestId('inputError-YearOfBirth');
