@@ -37,7 +37,7 @@ const positiveAddresses: { data: AddressDTO; description: string }[] = [
       streetAddress: faker.string.alpha({ length: 5 }),
       city: faker.string.alpha({ length: 3 }),
       state: faker.string.alpha({ length: 2 }),
-      zipCode: faker.number.int({ min: 10000, max: 99999 })
+      zipCode: faker.number.int({ min: 10000, max: 99999 }).toString()
     }
   },
   {
@@ -46,7 +46,7 @@ const positiveAddresses: { data: AddressDTO; description: string }[] = [
       streetAddress: faker.string.alpha({ length: 30 }),
       city: faker.string.alpha({ length: 15 }),
       state: faker.string.alpha({ length: 15 }),
-      zipCode: faker.number.int({ min: 10000, max: 99999 })
+      zipCode: faker.number.int({ min: 10000, max: 99999 }).toString()
     }
   }
 ];

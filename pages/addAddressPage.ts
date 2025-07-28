@@ -29,6 +29,10 @@ export default class AddAddressPage {
     this.zipCodeError = page.getByTestId('inputError-ZipCode');
   }
 
+  async fillZipCode(zipCode: string) {
+    await fillInput(this.zipCodeInput, zipCode, 'ZipCode');
+  }
+
   async fillAddressForm(address: AddressDTO) {
     await fillInput(this.streetAddressInput, address.streetAddress, 'Street Address');
     await fillInput(this.cityInput, address.city, 'City');

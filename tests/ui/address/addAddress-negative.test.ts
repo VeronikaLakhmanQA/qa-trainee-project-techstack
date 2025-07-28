@@ -17,7 +17,6 @@ type FieldValidationCase = {
   fieldName: string;
   override: Partial<AddressDTO>;
   error: (page: AddAddressPage) => Locator;
-  expectedError?: string;
 };
 
 function runFieldValidationTests(groupName: string, testCases: FieldValidationCase[]) {
