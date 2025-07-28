@@ -30,10 +30,7 @@ test.describe('Zip Code - invalid formats @desktop', () => {
 
   invalidZipCodes.forEach((zip) => {
     test(`should show error for invalid zip code: "${zip}"`, async () => {
-      const address = {
-        ...generateValidAddress(),
-        zipCode: zip
-      };
+      const address = generateValidAddress({ zipCode: zip });
 
       await addAddressPage.createAddress(address);
       const errorText = await getErrorText(addAddressPage.zipCodeError);

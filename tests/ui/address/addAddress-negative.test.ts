@@ -23,11 +23,12 @@ function runFieldValidationTests(groupName: string, testCases: FieldValidationCa
   test.describe(groupName, () => {
     testCases.forEach(({ fieldName, override, error }) => {
       test(`Should show error when ${fieldName} is invalid @desktop`, async () => {
-        let expectedError;
-        const address = { ...generateValidAddress(), ...override };
+        let expectedError: string;
+
+        const address = generateValidAddress(override);
         await addAddressPage.createAddress(address);
 
-        if (groupName.toLowerCase().includes('error address data')) {
+        if (groupName.toLowerCase().includes('empty required fields')) {
           expectedError = `${fieldName} is required`;
         } else {
           expectedError = `${fieldName} is too short`;
@@ -40,7 +41,7 @@ function runFieldValidationTests(groupName: string, testCases: FieldValidationCa
   });
 }
 
-const errorAddressData = [
+const emptyRequiredFields = [
   {
     fieldName: 'Street Address',
     override: { streetAddress: '' },
@@ -76,5 +77,5 @@ const tooShortFields = [
   }
 ];
 
-runFieldValidationTests('Error address data', errorAddressData);
+runFieldValidationTests('Empty required fields', emptyRequiredFields);
 runFieldValidationTests('Too short values', tooShortFields);
