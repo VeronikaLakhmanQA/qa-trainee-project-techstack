@@ -39,7 +39,7 @@ test.afterEach(async ({ request }) => {
   createdUsernames = [];
 });
 
-test('Create new user with valid "User Name" and "Year of Birth" @desktop @mobile', async ({
+test('create new user with valid "User Name" and "Year of Birth" @desktop @mobile', async ({
   page
 }) => {
   const homePage = new HomePage(page);

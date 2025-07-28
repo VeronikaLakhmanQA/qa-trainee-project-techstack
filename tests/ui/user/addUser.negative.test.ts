@@ -19,7 +19,7 @@ test.beforeEach(async ({ page }) => {
   addUserPage = new AddUserPage(page);
 });
 
-test('Should show browser error with empty "User Name" and "Year of Birth" @desktop', async () => {
+test('should show browser error with empty "User Name" and "Year of Birth" @desktop', async () => {
   await addUserPage.submitAddUserForm();
 
   await expect(
@@ -37,7 +37,7 @@ test('Should show browser error with empty "User Name" and "Year of Birth" @desk
   );
 });
 
-test('User is not created when "User Name" is too short @mobile', async () => {
+test('user is not created when "User Name" is too short @mobile', async () => {
   await addUserPage.fillUserForm(shortName);
   await addUserPage.submitAddUserForm();
 
@@ -69,7 +69,7 @@ const invalidYears = [
 ];
 
 invalidYears.forEach(({ year, description }) => {
-  test(`Validation error is shown when "Year of Birth" is: ${description} @desktop @mobile`, async () => {
+  test(`validation error is shown when "Year of Birth" is: ${description} @desktop @mobile`, async () => {
     await addUserPage.enterYearOfBirth(year);
     await addUserPage.submitAddUserForm();
 

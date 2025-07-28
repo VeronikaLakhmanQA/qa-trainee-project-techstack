@@ -5,7 +5,7 @@ import HomePage from '../../../pages/homePage';
 import { AddressDTO } from '../../../dto/addressDTO';
 import { BASE_URL, ROUTES } from '../../../utils/constants';
 import { AddressSteps } from '../../../steps/addressSteps';
-import DeleteAddressPage from '../../../pages/deleteAddressPage';
+import { generateValidAddress } from '../../../utils/dataGenerator';
 
 let addAddressPage: AddAddressPage;
 let createdStreetAddresses: string[] = [];
@@ -13,12 +13,7 @@ let createdStreetAddresses: string[] = [];
 const positiveAddresses: { data: AddressDTO; description: string }[] = [
   {
     description: 'with valid random data',
-    data: {
-      streetAddress: faker.location.streetAddress(),
-      city: faker.location.city(),
-      state: faker.location.state(),
-      zipCode: faker.number.int({ min: 10000, max: 99999 })
-    }
+    data: generateValidAddress()
   },
   {
     description: 'minimum allowed field lengths',
@@ -46,9 +41,7 @@ test.beforeEach(async ({ page }) => {
 });
 
 test.afterEach(async ({ page }) => {
-  const homePage = new HomePage(page);
-  const deleteAddressPage = new DeleteAddressPage(page);
-  const addressSteps = new AddressSteps(homePage, deleteAddressPage);
+  const addressSteps = new AddressSteps(page);
 
   if (!createdStreetAddresses.length) return;
 
@@ -59,7 +52,7 @@ test.afterEach(async ({ page }) => {
 });
 
 positiveAddresses.forEach(({ data, description }) => {
-  test(`Should create a new address with ${description} @desktop`, async ({ page }) => {
+  test(`should create a new address with ${description} @desktop`, async ({ page }) => {
     const homePage = new HomePage(page);
 
     await addAddressPage.createAddress(data);
