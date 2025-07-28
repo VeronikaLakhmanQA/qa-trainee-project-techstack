@@ -28,7 +28,7 @@ test.afterEach(async ({ page }) => {
 
 const positiveAddresses: { data: AddressDTO; description: string }[] = [
   {
-    description: 'with valid random data',
+    description: 'valid random data',
     data: generateValidAddress()
   },
   {
