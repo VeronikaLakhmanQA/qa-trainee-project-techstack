@@ -10,6 +10,22 @@ import { generateValidAddress } from '../../../utils/dataGenerator';
 let addAddressPage: AddAddressPage;
 let createdStreetAddresses: string[] = [];
 
+test.beforeEach(async ({ page }) => {
+  await page.goto(ROUTES.ADD_ADDRESS);
+  addAddressPage = new AddAddressPage(page);
+});
+
+test.afterEach(async ({ page }) => {
+  const addressSteps = new AddressSteps(page);
+
+  if (!createdStreetAddresses.length) return;
+
+  for (const street of createdStreetAddresses) {
+    await addressSteps.deleteAddressByStreet(street);
+  }
+  createdStreetAddresses = [];
+});
+
 const positiveAddresses: { data: AddressDTO; description: string }[] = [
   {
     description: 'with valid random data',
@@ -34,22 +50,6 @@ const positiveAddresses: { data: AddressDTO; description: string }[] = [
     }
   }
 ];
-
-test.beforeEach(async ({ page }) => {
-  await page.goto(ROUTES.ADD_ADDRESS);
-  addAddressPage = new AddAddressPage(page);
-});
-
-test.afterEach(async ({ page }) => {
-  const addressSteps = new AddressSteps(page);
-
-  if (!createdStreetAddresses.length) return;
-
-  for (const street of createdStreetAddresses) {
-    await addressSteps.deleteAddressByStreet(street);
-  }
-  createdStreetAddresses = [];
-});
 
 positiveAddresses.forEach(({ data, description }) => {
   test(`should create a new address with ${description} @desktop`, async ({ page }) => {
