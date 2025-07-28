@@ -28,7 +28,7 @@ function runFieldValidationTests(groupName: string, testCases: FieldValidationCa
         const address = { ...generateValidAddress(), ...override };
         await addAddressPage.createAddress(address);
 
-        if (groupName.toLowerCase().includes('required')) {
+        if (groupName.toLowerCase().includes('error address data')) {
           expectedError = `${fieldName} is required`;
         } else {
           expectedError = `${fieldName} is too short`;
@@ -77,5 +77,5 @@ const tooShortFields = [
   }
 ];
 
-runFieldValidationTests('Required fields', errorAddressData);
+runFieldValidationTests('Error address data', errorAddressData);
 runFieldValidationTests('Too short values', tooShortFields);
