@@ -7,7 +7,6 @@ import { generateValidAddress } from '../../../utils/dataGenerator';
 import { AddressSteps } from '../../../steps/addressSteps';
 
 let addressSteps: AddressSteps;
-
 let createdStreetAddresses: string[] = [];
 
 test.beforeEach(async ({ page }) => {
@@ -17,7 +16,6 @@ test.beforeEach(async ({ page }) => {
 
 test.afterEach(async ({ page }) => {
   const addressSteps = new AddressSteps(page);
-
   if (!createdStreetAddresses.length) return;
 
   for (const street of createdStreetAddresses) {

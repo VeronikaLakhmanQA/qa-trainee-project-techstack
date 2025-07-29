@@ -55,7 +55,6 @@ invalidZipCodes.forEach(({ zip, description }) => {
 
 test('should show error when zip code is empty @desktop', async () => {
   const address = generateValidAddress({ zipCode: '' });
-
   await addressSteps.createAddress(address);
 
   const errorText = await GenericSteps.getErrorText(addAddressPage.zipCodeError);
