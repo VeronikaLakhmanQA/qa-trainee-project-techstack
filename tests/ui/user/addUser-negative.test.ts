@@ -1,11 +1,14 @@
 import { test, expect } from '@playwright/test';
-import AddUserPage from '../../../pages/ui/addUserPage';
+import AddUserPage from '../../../pages/addUserPage';
 import { faker } from '@faker-js/faker';
 import { Gender } from '../../../enums/gender.enum';
 import { UserDTO } from '../../../dto/userDTO';
 import { ROUTES } from '../../../utils/constants';
+import { GenericSteps } from '../../../steps/genericSteps';
+import { UserSteps } from '../../../steps/userSteps';
 
 let addUserPage: AddUserPage;
+let userSteps: UserSteps;
 
 const shortName: UserDTO = {
   gender: Gender.Female,
@@ -16,16 +19,17 @@ const shortName: UserDTO = {
 test.beforeEach(async ({ page }) => {
   await page.goto(ROUTES.ADD_USER);
   addUserPage = new AddUserPage(page);
+  userSteps = new UserSteps(page);
 });
 
-test('Should show browser error with empty "User Name" and "Year of Birth" @desktop', async () => {
-  await addUserPage.submitAddUserForm();
+test('should show browser error with empty "User Name" and "Year of Birth" @desktop', async () => {
+  await userSteps.submitAddUserForm();
 
   await expect(
     addUserPage.inputUserNameError,
     "Invalid 'User Name' error should be visible"
   ).toBeVisible();
-  expect(await addUserPage.getErrorText(addUserPage.inputUserNameError)).toEqual(
+  expect(await GenericSteps.getErrorText(addUserPage.inputUserNameError)).toEqual(
     'Name is requried'
   );
 
@@ -33,20 +37,20 @@ test('Should show browser error with empty "User Name" and "Year of Birth" @desk
     addUserPage.inputYearOfBirthError,
     "Invalid 'Year Of Birth' error should be visible"
   ).toBeVisible();
-  expect(await addUserPage.getErrorText(addUserPage.inputYearOfBirthError)).toEqual(
+  expect(await GenericSteps.getErrorText(addUserPage.inputYearOfBirthError)).toEqual(
     'Year of Birth is requried'
   );
 });
 
-test('User is not created when "User Name" is too short @mobile', async () => {
-  await addUserPage.fillUserForm(shortName);
-  await addUserPage.submitAddUserForm();
+test('user is not created when "User Name" is too short @mobile', async () => {
+  await userSteps.fillUserForm(shortName);
+  await userSteps.submitAddUserForm();
 
   await expect(
     addUserPage.inputUserNameError,
     "Invalid 'User Name' error should be visible"
   ).toBeVisible();
-  expect(await addUserPage.getErrorText(addUserPage.inputUserNameError)).toEqual(
+  expect(await GenericSteps.getErrorText(addUserPage.inputUserNameError)).toEqual(
     'Name is too short'
   );
 });
@@ -55,8 +59,8 @@ test('"User Name" field should not allow more than 14 characters @desktop @mobil
   const userNameCharLimit = 14;
   const longUsername = faker.string.alpha({ length: userNameCharLimit + 1 });
 
-  await addUserPage.enterUsername(longUsername);
-  await addUserPage.submitAddUserForm();
+  await GenericSteps.fillInput(addUserPage.userNameInput, longUsername, 'Username');
+  await userSteps.submitAddUserForm();
 
   const actualUsernameValue = await addUserPage.userNameInput.inputValue();
 
@@ -72,15 +76,15 @@ const invalidYears = [
 ];
 
 invalidYears.forEach(({ year, description }) => {
-  test(`Validation error is shown when "Year of Birth" is: ${description} @desktop @mobile`, async () => {
-    await addUserPage.enterYearOfBirth(year);
-    await addUserPage.submitAddUserForm();
+  test(`validation error is shown when "Year of Birth" is: ${description} @desktop @mobile`, async () => {
+    await GenericSteps.fillInput(addUserPage.yearOfBirthInput, year, 'YearOfBirth');
+    await userSteps.submitAddUserForm();
 
     await expect(
       addUserPage.inputYearOfBirthError,
       `Validation error should be shown when year is ${year} (${description})`
     ).toBeVisible();
-    expect(await addUserPage.getErrorText(addUserPage.inputYearOfBirthError)).toEqual(
+    expect(await GenericSteps.getErrorText(addUserPage.inputYearOfBirthError)).toEqual(
       'Not valid Year of Birth is set'
     );
   });
